@@ -16,8 +16,9 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   externals: {
+    react: 'react',
     'axios': 'axios'
-  },
+},
   output: {
     filename: 'index.js',
     libraryTarget: "umd",
