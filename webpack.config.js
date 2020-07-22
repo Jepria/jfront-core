@@ -16,6 +16,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   externals: {
+    'axios': 'axios'
   },
   output: {
     filename: 'index.js',
