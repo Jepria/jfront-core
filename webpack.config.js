@@ -16,6 +16,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   externals: {
+    react: 'react'
   },
   output: {
     filename: 'index.js',
