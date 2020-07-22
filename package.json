@@ -4,7 +4,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "devDependencies": {
+    "@babel/types": "^7.10.5",
     "@babel/core": "^7.10.5",
+    "@babel/cli": "^7.10.5",
+    "@babel/traverse": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "awesome-typescript-loader": "^5.2.1",
@@ -26,6 +29,6 @@
     "test": "jest",
     "build": "webpack --config webpack.config.js --mode production",
     "copy-resources": "cpx \"src/**/*.!(ts|tsx)\" dist",
-    "clean-build": "npm run clean && npm run build"
+    "clean-test-build": "npm run clean && npm run test && npm run build"
   }
 }
