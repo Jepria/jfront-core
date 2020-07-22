@@ -4,9 +4,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
     "awesome-typescript-loader": "^5.2.1",
+    "babel-jest": "^26.1.0",
+    "jest": "^26.1.0",
     "path": "^0.12.7",
-    "react-datepicker": "^2.16.0",
     "rimraf": "^3.0.2",
     "source-map-loader": "^1.0.0",
     "typescript": "^3.9.5",
@@ -19,6 +23,7 @@
   },
   "scripts": {
     "clean": "rimraf dist",
+    "test": "jest",
     "build": "webpack --config webpack.config.js --mode production",
     "copy-resources": "cpx \"src/**/*.!(ts|tsx)\" dist",
     "clean-build": "npm run clean && npm run build"
