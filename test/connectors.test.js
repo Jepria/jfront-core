@@ -1,6 +1,6 @@
 import axios from 'axios';
-import ConnectorBase from '../src/rest/connectors/ConnectorBase';
-import ConnectorCrud from '../src/rest/connectors/ConnectorCrud';
+import ConnectorBase from '../src/rest/connector/ConnectorBase';
+import ConnectorCrud from '../src/rest/connector/ConnectorCrud';
 
 jest.mock('axios');
 

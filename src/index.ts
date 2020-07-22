@@ -1,3 +1,3 @@
 export * from './rest/types'
-export * from './rest/connectors/ConnectorBase';
-export * from './rest/connectors/ConnectorCrud';
+export * from './rest/connector/ConnectorBase';
+export * from './rest/connector/ConnectorCrud';
