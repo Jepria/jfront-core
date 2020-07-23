@@ -1,8 +1,8 @@
-import BaseConnector from './ConnectorBase';
+import { ConnectorBase } from './ConnectorBase';
 import { SearchRequest, NetworkError, UNKNOWN_ERROR, BAD_REQUEST, NOT_FOUND, SERVER_ERROR, AUTHORIZATION_FAILED, ACCESS_DENIED } from '../types';
 import { AxiosResponse, AxiosError } from 'axios';
 
-const handleAxiosError = (error: AxiosError): NetworkError => {
+export const handleAxiosError = (error: AxiosError): NetworkError => {
   if (error.response) {
     /*
      * The request was made and the server responded with a
@@ -22,7 +22,7 @@ const handleAxiosError = (error: AxiosError): NetworkError => {
   }
 }
 
-const buildError = (response: AxiosResponse): NetworkError => {
+export const buildError = (response: AxiosResponse): NetworkError => {
   let error: NetworkError;
   switch (response.status) {
     case 400: {
@@ -72,7 +72,7 @@ const buildError = (response: AxiosResponse): NetworkError => {
   return error;
 }
 
-export default class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends BaseConnector {
+export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends ConnectorBase {
 
   private axios = this.getAxios();
 

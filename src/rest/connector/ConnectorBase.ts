@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-export default class ConnectorBase {
+export class ConnectorBase {
   
   protected baseUrl: string;
   protected axiosInstance?: AxiosInstance;
