@@ -2,6 +2,13 @@ import { ConnectorBase } from './ConnectorBase';
 import { SearchRequest, NetworkError, UNKNOWN_ERROR, BAD_REQUEST, NOT_FOUND, SERVER_ERROR, AUTHORIZATION_FAILED, ACCESS_DENIED } from '../types';
 import { AxiosResponse, AxiosError } from 'axios';
 
+/**
+ * Обработка ошибки Axios.
+ * 
+ * Axios error handling.
+ * @param {AxiosError} error 
+ * @returns {NetworkError}
+ */
 export const handleAxiosError = (error: AxiosError): NetworkError => {
   if (error.response) {
     /*
@@ -15,13 +22,19 @@ export const handleAxiosError = (error: AxiosError): NetworkError => {
      * is an instance of XMLHttpRequest in the browser and an instance
      * of http.ClientRequest in Node.js
      */
-    return {type: UNKNOWN_ERROR, message: error.message, content: error.request};
+    return { type: UNKNOWN_ERROR, message: error.message, content: error.request };
   } else {
     // Something happened in setting up the request and triggered an Error
-    return {type: UNKNOWN_ERROR, message: error.message};
+    return { type: UNKNOWN_ERROR, message: error.message };
   }
 }
 
+/**
+ * Получение ошибки из ответа.
+ * 
+ * Building error object from response.
+ * @param AxiosResponse response 
+ */
 export const buildError = (response: AxiosResponse): NetworkError => {
   let error: NetworkError;
   switch (response.status) {
@@ -72,11 +85,26 @@ export const buildError = (response: AxiosResponse): NetworkError => {
   return error;
 }
 
+/**
+ * Коннектор для подключения к стандартной реализации CRUD RESTful API jepria-rest.
+ * 
+ * Standard jepria-rest CRUD RESTful API connector.
+ * @example 
+ * let connector: ConnectorCrud<Dto, CreateDto, UpdateDto, Template> = new ConnectorCrud("http://localhost:8080/feature/api/feature");
+ */
 export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends ConnectorBase {
 
   private axios = this.getAxios();
 
-  create = (createDto: CreateDto, getRecordById = true): Promise<Dto | string> => {
+  /**
+   * Создание новой записи.
+   * 
+   * Creating a new record.
+   * @param {CreateDto} createDto record create DTO
+   * @param {boolean} getRecordById optional flag, if true getRecordById will be called after create (default true). 
+   * @returns {Promise<Dto | string>} Promise with DTO or string ID of created record, if getRecordById===false
+   */
+  create = (createDto: CreateDto, getRecordById: boolean = true): Promise<Dto | string> => {
     return new Promise<Dto | string>((resolve, reject) => {
       this.axios.post(
         this.baseUrl,
@@ -116,7 +144,16 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     });
   }
 
-  update = (id: string, updateDto: UpdateDto, getRecordById = true): Promise<Dto | void> => {
+  /**
+   * Обновление записи.
+   * 
+   * Record updating.
+   * @param {string} id record primary id
+   * @param {UpdateDto} updateDto record update DTO
+   * @param {boolean} getRecordById optional flag, if true getRecordById will be called after create (default true). 
+   * @returns {Promise<Dto | void>} Promise with DTO or nothing if getRecordById===false
+   */
+  update = (id: string, updateDto: UpdateDto, getRecordById: boolean = true): Promise<Dto | void> => {
     return new Promise<Dto | void>((resolve, reject) => {
       this.axios.put(
         this.baseUrl + `/${id}`,
@@ -155,6 +192,12 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     });
   }
 
+  /**
+   * Удаление записи.
+   * 
+   * Record deletion.
+   * @param {string} id record id
+   */
   delete = (id: string): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       this.axios.delete(
@@ -171,7 +214,13 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     })
   }
 
-
+  /**
+   * Создание поискового запроса.
+   * 
+   * Search request template creation.
+   * @param {SearchRequest<SearchTemplate>} searchRequest search template
+   * @param {string} cacheControl Cache-control header value
+   */
   postSearchRequest = (searchRequest: SearchRequest<SearchTemplate>, cacheControl: string = 'no-cache') => {
     return new Promise<string>((resolve, reject) => {
       this.axios.post(
@@ -195,6 +244,15 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     });
   }
 
+  /**
+   * Поисковый запрос.
+   * 
+   * Search request.
+   * @param {string} searchId search template id
+   * @param {number} pageSize page size
+   * @param {number} page page number
+   * @param {string} cacheControl Cache-control header value
+   */
   search = (searchId: string, pageSize: number, page: number, cacheControl: string = 'no-cache'): Promise<Array<Dto>> => {
     return new Promise<Array<Dto>>((resolve, reject) => {
       this.axios.get(
@@ -218,6 +276,13 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     });
   }
 
+  /**
+   * Получение количества найденых записей по поисковому запросу.
+   * 
+   * Search resultset size request.
+   * @param {string} searchId  search template id
+   * @param {string} cacheControl Cache-control header value
+   */
   getResultSetSize = (searchId: string, cacheControl: string = 'no-cache'): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
       this.axios.get(
@@ -239,6 +304,12 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     });
   }
 
+  /**
+   * Получение записи по ключу.
+   * 
+   * Get record by id.
+   * @param {string} id record id
+   */
   getRecordById = (id: string): Promise<Dto> => {
     return new Promise<Dto>((resolve, reject) => {
       this.axios.get(

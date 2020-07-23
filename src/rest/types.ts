@@ -65,7 +65,7 @@ export interface ColumnSortConfiguration {
   sortOrder: string;
 }
 
-export type Option<Value = any> = {
+export type Option<Value> = {
   name: string;
   value: Value;
 }
