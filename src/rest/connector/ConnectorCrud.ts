@@ -172,7 +172,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
   }
 
 
-  postSearchRequest = (searchRequest: SearchRequest<SearchTemplate>) => {
+  postSearchRequest = (searchRequest: SearchRequest<SearchTemplate>, cacheControl: string = 'no-cache') => {
     return new Promise<string>((resolve, reject) => {
       this.axios.post(
         this.baseUrl + '/search',
@@ -181,7 +181,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
           headers: {
             'Accept': 'application/json;charset=utf-8',
             'Content-Type': 'application/json;charset=utf-8',
-            'X-Cache-Control': 'no-cache'
+            'Cache-Control': cacheControl
           }
         }
       ).then(response => {
@@ -195,7 +195,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     });
   }
 
-  search = (searchId: string, pageSize: number, page: number): Promise<Array<Dto>> => {
+  search = (searchId: string, pageSize: number, page: number, cacheControl: string = 'no-cache'): Promise<Array<Dto>> => {
     return new Promise<Array<Dto>>((resolve, reject) => {
       this.axios.get(
         this.baseUrl + `/search/${searchId}/resultset?pageSize=${pageSize}&page=${page}`,
@@ -203,7 +203,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
           headers: {
             'Accept': 'application/json;charset=utf-8',
             'Content-Type': 'application/json;charset=utf-8',
-            'Cache-Control': 'no-cache'
+            'Cache-Control': cacheControl
           }
         }
       ).then(response => {
@@ -218,7 +218,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
     });
   }
 
-  getResultSetSize = (searchId: string): Promise<number> => {
+  getResultSetSize = (searchId: string, cacheControl: string = 'no-cache'): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
       this.axios.get(
         this.baseUrl + `/search/${searchId}/resultset-size`,
@@ -226,7 +226,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto, SearchTemplate> extends Co
           headers: {
             'Accept': 'application/json;charset=utf-8',
             'Content-Type': 'application/json;charset=utf-8',
-            'X-Cache-Control': 'no-cache'
+            'Cache-Control': cacheControl
           }
         }
       ).then(response => {
