@@ -16,7 +16,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto> extends ConnectorBase {
    * @param {boolean} getRecordById optional flag, if true getRecordById will be called after create (default true).
    * @returns {Promise<Dto | string>} Promise with DTO or string ID of created record, if getRecordById===false
    */
-  create = (createDto: CreateDto, getRecordById: boolean = true): Promise<Dto | string> => {
+  create = (createDto: CreateDto, getRecordById = true): Promise<Dto | string> => {
     return new Promise<Dto | string>((resolve, reject) => {
       this.axios.post(
         this.baseUrl,
@@ -29,7 +29,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto> extends ConnectorBase {
         },
       ).then(response => {
         if (response.status === 201) {
-          let location: string = response.headers["location"];
+          const location: string = response.headers["location"];
           if (getRecordById) {
             this.axios.get(
               location,
@@ -63,7 +63,7 @@ export class ConnectorCrud<Dto, CreateDto, UpdateDto> extends ConnectorBase {
    * @param {boolean} getRecordById optional flag, if true getRecordById will be called after create (default true).
    * @returns {Promise<Dto | void>} Promise with DTO or nothing if getRecordById===false
    */
-  update = (id: string, updateDto: UpdateDto, getRecordById: boolean = true): Promise<Dto | void> => {
+  update = (id: string, updateDto: UpdateDto, getRecordById = true): Promise<Dto | void> => {
     return new Promise<Dto | void>((resolve, reject) => {
       this.axios.put(
         this.baseUrl + `/${id}`,

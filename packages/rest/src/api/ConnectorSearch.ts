@@ -16,7 +16,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
    * @param {SearchRequest<SearchTemplate>} searchRequest search template
    * @param {string} cacheControl Cache-control header value
    */
-  postSearchRequest = (searchRequest: SearchRequest<SearchTemplate>, cacheControl: string = "no-cache") => {
+  postSearchRequest = (searchRequest: SearchRequest<SearchTemplate>, cacheControl = "no-cache") => {
     return new Promise<string>((resolve, reject) => {
       this.axios.post(
         this.baseUrl + "/search",
@@ -30,7 +30,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
         },
       ).then((response: AxiosResponse<any>) => {
         if (response.status === 201) {
-          let location: string = response.headers["location"];
+          const location: string = response.headers["location"];
           resolve(location.split("/").pop());
         } else {
           reject(buildError(response));
@@ -46,7 +46,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
    * @param {number} page page number
    * @param {string} cacheControl Cache-control header value
    */
-  search = (searchId: string, pageSize: number, page: number, cacheControl: string = "no-cache"): Promise<Array<Dto>> => {
+  search = (searchId: string, pageSize: number, page: number, cacheControl = "no-cache"): Promise<Array<Dto>> => {
     return new Promise<Array<Dto>>((resolve, reject) => {
       this.axios.get(
         this.baseUrl + `/search/${searchId}/resultset?pageSize=${pageSize}&page=${page}`,
@@ -74,7 +74,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
    * @param {string} searchId  search template id
    * @param {string} cacheControl Cache-control header value
    */
-  getResultSetSize = (searchId: string, cacheControl: string = "no-cache"): Promise<number> => {
+  getResultSetSize = (searchId: string, cacheControl = "no-cache"): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
       this.axios.get(
         this.baseUrl + `/search/${searchId}/resultset-size`,
