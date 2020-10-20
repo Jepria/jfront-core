@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jepria/jfront-ui.git"
+    "url": "git+https://github.com/Jepria/jfront-core.git"
   },
   "devDependencies": {
     "@babel/cli": "7.10.5",
