@@ -7,7 +7,6 @@ import {
   NetworkError,
   NOT_FOUND,
   SERVER_ERROR,
-  UNKNOWN_ERROR,
 } from "./types";
 
 /**
