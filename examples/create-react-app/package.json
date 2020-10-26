@@ -1,6 +1,6 @@
 {
-  "name": "jfront-cra",
-  "version": "0.3.4",
+  "name": "jfront-core-cra",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@jfront/core-rest" : "0.1.0",
