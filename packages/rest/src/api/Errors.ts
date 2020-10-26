@@ -10,10 +10,9 @@ import {
   UNKNOWN_ERROR,
 } from "./types";
 
-
 /**
  * Building error object from response.
- * @param AxiosResponse response
+ * @param AxiosResponse response 
  */
 export const buildError = (response: AxiosResponse): NetworkError => {
   let error: NetworkError;
@@ -21,53 +20,46 @@ export const buildError = (response: AxiosResponse): NetworkError => {
     case 400: {
       error = {
         type: BAD_REQUEST,
-        constraintViolations: response.data,
-      };
+        constraintViolations: response?.data
+      }
       break;
     }
     case 401: {
       error = {
-        type: AUTHORIZATION_FAILED,
-      };
+        type: AUTHORIZATION_FAILED
+      }
       break;
     }
     case 403: {
       error = {
         type: ACCESS_DENIED,
-        message: response.data || response.statusText,
-      };
+        message: response?.data || response?.statusText
+      }
       break;
     }
     case 404: {
       error = {
         type: NOT_FOUND,
-        url: response.config.url,
-      };
-      break;
-    }
-    case 500: {
-      error = {
-        type: SERVER_ERROR,
-        error: response.data,
-      };
+        url: response?.config?.url
+      }
       break;
     }
     default: {
       error = {
-        type: UNKNOWN_ERROR,
-        errorCode: response.status,
-        message: response.statusText,
-        content: response.data,
-      };
+        type: SERVER_ERROR,
+        errorId: response?.data?.errorId,
+        errorCode: response?.data?.errorCode || response?.status,
+        errorMessage: response?.data?.errorMessage,
+      }
       break;
     }
   }
   return error;
-};
+}
 
 /**
  * Axios error handling.
- * @param {AxiosError} error
+ * @param {AxiosError} error 
  * @returns {NetworkError}
  */
 export const handleAxiosError = (error: AxiosError): NetworkError => {
@@ -83,9 +75,9 @@ export const handleAxiosError = (error: AxiosError): NetworkError => {
      * is an instance of XMLHttpRequest in the browser and an instance
      * of http.ClientRequest in Node.js
      */
-    return { type: UNKNOWN_ERROR, message: error.message, content: error.request };
+    return { type: SERVER_ERROR, errorMessage: error?.message };
   } else {
     // Something happened in setting up the request and triggered an Error
-    return { type: UNKNOWN_ERROR, message: error.message };
+    throw new Error(error.message);
   }
-};
+}

@@ -3,7 +3,6 @@ export const NOT_FOUND = 404;
 export const AUTHORIZATION_FAILED = 401;
 export const ACCESS_DENIED = 403;
 export const SERVER_ERROR = 500;
-export const UNKNOWN_ERROR = 1;
 
 export interface BadRequest {
   type: typeof BAD_REQUEST;
@@ -27,34 +26,21 @@ export interface AccessDenied {
 
 export interface ServerError {
   type: typeof SERVER_ERROR;
-  error?: UnhandledError;
-}
-
-export interface UnknownError {
-  type: typeof UNKNOWN_ERROR;
   errorCode?: number;
-  message?: string;
-  content?: any;
+  errorId?: string;
+  errorMessage?: string;
 }
 
 export type NetworkError = BadRequest |
   NotFound |
   AuthorizationFailed |
   AccessDenied |
-  ServerError |
-  UnknownError;
+  ServerError;
 
 export type ConstraintViolation = {
   propertyPath: string;
   violationDescription: string;
 }
-
-export type UnhandledError = {
-  errorCode?: number;
-  errorId?: string;
-  errorMessage?: string;
-}
-
 export interface SearchRequest<Template> {
   template: Template;
   listSortConfiguration?: Array<ColumnSortConfiguration>;
