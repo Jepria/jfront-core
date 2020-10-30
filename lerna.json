@@ -8,11 +8,11 @@
     "publish": {
       "conventionalCommits": true,
       "message": "chore(release): publish",
-      "ignoreChanges": ["**/stories/**", "**/tests/**", "**/examples/**", "**/*.md"],
+      "ignoreChanges": ["**/stories/**", "**/tests/**", "./examples/**", "**/*.md"],
       "allowBranch": "master"
     },
     "version": {
-      "ignoreChanges": ["**/stories/**", "**/tests/**", "**/examples/**", "**/*.md"],
+      "ignoreChanges": ["**/stories/**", "**/tests/**", "./examples/**", "**/*.md"],
       "allowBranch": ["master", "release/*", "hotfix/*"]
     }
   }
