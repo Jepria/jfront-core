@@ -5,8 +5,8 @@ import {
   PayloadAction,
   ActionReducerMapBuilder,
   CaseReducers,
-  createAsyncThunk,
-  AsyncThunk,
+  ThunkAction,
+  Action,
 } from "@reduxjs/toolkit";
 import { ConnectorCrud } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
@@ -22,7 +22,7 @@ import {
   UpdateSuccessAction,
 } from "../action/crudActionTypes";
 import { EntityState } from "../types";
-import { put, call, all, takeEvery, takeLatest } from "redux-saga/effects";
+import { put, call, all, takeEvery } from "redux-saga/effects";
 
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
@@ -80,10 +80,10 @@ export const createCrudSlice = <
         state.currentRecord = action.payload.record;
         state.selectedRecords = [];
       },
-      remove(state: S, action: PayloadAction<DeleteAction<PrimaryKey>>) {
+      delete(state: S, action: PayloadAction<DeleteAction<PrimaryKey>>) {
         state.isLoading = true;
       },
-      removeSuccess(state: S) {
+      deleteSuccess(state: S) {
         state.isLoading = true;
         state.currentRecord = undefined;
         state.selectedRecords = [];
@@ -95,119 +95,83 @@ export const createCrudSlice = <
       ...reducers,
     },
     extraReducers: {
-      [name + "/getRecordByIdThunk/pending"]: (state) => {
-        state.isLoading = true;
-      },
-      [name + "/getRecordByIdThunk/fulfilled"]: (state, action) => {
-        state.isLoading = false;
-        state.currentRecord = action.payload;
-        state.selectedRecords = [];
-      },
-      [name + "/getRecordByIdThunk/rejected"]: (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
-      [name + "/createThunk/pending"]: (state, action) => {
-        state.isLoading = true;
-      },
-      [name + "/createThunk/fulfilled"]: (state, action) => {
-        state.isLoading = false;
-        state.currentRecord = action.payload;
-        state.selectedRecords = [];
-      },
-      [name + "/createThunk/rejected"]: (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
-      [name + "/updateThunk/pending"]: (state, action) => {
-        state.isLoading = true;
-      },
-      [name + "/updateThunk/fulfilled"]: (state, action) => {
-        state.isLoading = false;
-        state.currentRecord = action.payload;
-        state.selectedRecords = [];
-      },
-      [name + "/updateThunk/rejected"]: (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
-      [name + "/removeThunk/pending"]: (state, action) => {
-        state.isLoading = true;
-      },
-      [name + "/removeThunk/fulfilled"]: (state, action) => {
-        state.isLoading = false;
-        state.currentRecord = undefined;
-        state.selectedRecords = [];
-      },
-      [name + "/removeThunk/rejected"]: (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
       ...extraReducers,
     },
   });
 
+  const actions = slice.actions as any; //cast to any, unknown TS issue
+
   const getRecordByIdThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return createAsyncThunk<Entity, GetRecordByIdAction<PrimaryKey>>(
-      name + "/getRecordByIdThunk",
-      async (payload, { rejectWithValue }) => {
+    return function (
+      payload: GetRecordByIdAction<PrimaryKey>,
+    ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
+      return async (dispatch) => {
         try {
-          const response = await api.getRecordById(String(payload.primaryKey));
-          return response;
+          dispatch(actions.getRecordById(payload));
+          const record = await api.getRecordById(String(payload.primaryKey));
+          dispatch(actions.getRecordByIdSuccess({ record }));
+          return record;
         } catch (error) {
-          return rejectWithValue(error);
+          return actions.failure({ error });
         }
-      },
-    );
+      };
+    };
   };
 
   const createThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return createAsyncThunk<Entity, CreateAction<CreateEntity>>(
-      name + "/createThunk",
-      async (payload, { rejectWithValue }) => {
+    return function (
+      payload: CreateAction<CreateEntity>,
+    ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
+      return async (dispatch) => {
         try {
-          const response = await api.create(payload.values);
-          return response as Entity;
+          dispatch(actions.create(payload));
+          const record = await api.create(payload.values);
+          dispatch(actions.createSuccess({ record }));
+          return record;
         } catch (error) {
-          return rejectWithValue(error);
+          return actions.failure({ error });
         }
-      },
-    );
+      };
+    };
   };
 
   const updateThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return createAsyncThunk<Entity, UpdateAction<PrimaryKey, UpdateEntity>>(
-      name + "/updateThunk",
-      async (payload, { rejectWithValue }) => {
+    return function (
+      payload: UpdateAction<PrimaryKey, UpdateEntity>,
+    ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
+      return async (dispatch) => {
         try {
-          const response = await api.update(String(payload.primaryKey), payload.values);
-          return response as Entity;
+          dispatch(actions.update(payload));
+          const record = await api.update(String(payload.primaryKey), payload.values);
+          dispatch(actions.updateSuccess({ record }));
+          return record;
         } catch (error) {
-          return rejectWithValue(error);
+          return actions.failure({ error });
         }
-      },
-    );
+      };
+    };
   };
 
-  const removeThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return createAsyncThunk<void, DeleteAction<PrimaryKey>>(
-      name + "/removeThunk",
-      async (payload, { rejectWithValue }) => {
+  const deleteThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
+    return function (
+      payload: DeleteAction<PrimaryKey>,
+    ): ThunkAction<Promise<void>, S, unknown, Action<string>> {
+      return async (dispatch) => {
         try {
+          dispatch(actions.delete(payload));
           // build promise array
           const promises = payload.primaryKeys.map((primaryKey) => api.delete(String(primaryKey)));
           // wait for all finish
           await Promise.all(promises);
+          dispatch(actions.deleteSuccess());
         } catch (error) {
-          return rejectWithValue(error);
+          return actions.failure({ error });
         }
-      },
-    );
+      };
+    };
   };
 
   const createSagaMiddleware = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    const actions = slice.actions as any;
-
     function* create(action: PayloadAction<CreateAction<CreateEntity>>) {
       try {
         const createdRecord = yield call(api.create, action.payload.values);
@@ -236,12 +200,12 @@ export const createCrudSlice = <
       }
     }
 
-    function* remove(action: PayloadAction<DeleteAction<PrimaryKey>>) {
+    function* _delete(action: PayloadAction<DeleteAction<PrimaryKey>>) {
       try {
         yield all(
           action.payload.primaryKeys.map((primaryKey) => call(api.delete, String(primaryKey))),
         );
-        yield put(actions.removeSuccess());
+        yield put(actions.deleteSuccess());
         if (action.payload.callback) {
           yield call(action.payload.callback);
         }
@@ -265,7 +229,7 @@ export const createCrudSlice = <
     function* entityWatcher() {
       yield takeEvery(actions.create.type, create);
       yield takeEvery(actions.update.type, update);
-      yield takeEvery(actions.remove.type, remove);
+      yield takeEvery(actions.delete.type, _delete);
       yield takeEvery(actions.getRecordById, getRecordById);
     }
 
@@ -279,7 +243,7 @@ export const createCrudSlice = <
     actions: slice.actions,
     reducer: slice.reducer,
     thunk: {
-      removeThunk,
+      deleteThunk,
       updateThunk,
       createThunk,
       getRecordByIdThunk,

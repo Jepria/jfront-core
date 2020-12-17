@@ -2,10 +2,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../app/store/reducer";
 import { ListPage } from "./page/ListPage";
-import { actions as searchActions, search, postSearchTemplate } from "./state/listSearchSlice";
+import { search, postSearch } from "./state/listSearchSlice";
 import { useFormik } from "formik";
 import namor from "namor";
-import { create, remove } from "./state/listCrudSlice";
+import { createRecord, deleteRecord } from "./state/listCrudSlice";
 import { useAppDispatch } from "../app/store/configureStore";
 
 export const List = () => {
@@ -14,26 +14,21 @@ export const List = () => {
     (state: AppState) => state.list.listCrudSlice,
   );
   const dispatch = useAppDispatch();
-  const formik = useFormik<{ name?: string }>({
+  const formik = useFormik<{ name: string }>({
     enableReinitialize: true,
-    initialValues: {},
+    initialValues: {
+      name: "",
+    },
     onSubmit: (values) => {
-      console.log(values);
       dispatch(
-        postSearchTemplate({
+        postSearch({
           searchTemplate: {
-            template: values.name || "",
+            template: values.name,
           },
+          pageSize: 0,
+          page: 0,
         }),
-      ).then((action) => {
-        dispatch(
-          search({
-            searchId: (action.payload as any).searchId,
-            pageSize: 0,
-            page: 0,
-          }),
-        );
-      });
+      );
     },
   });
 
@@ -48,34 +43,22 @@ export const List = () => {
       );
     } else if (searchTemplate) {
       dispatch(
-        postSearchTemplate({
+        postSearch({
           searchTemplate,
+          pageSize: 0,
+          page: 0,
         }),
-      ).then((action) => {
-        dispatch(
-          search({
-            searchId: (action.payload as any).searchId,
-            pageSize: 0,
-            page: 0,
-          }),
-        );
-      });
+      );
     } else {
       dispatch(
-        postSearchTemplate({
+        postSearch({
           searchTemplate: {
             template: "",
           },
+          pageSize: 0,
+          page: 0,
         }),
-      ).then((action) => {
-        dispatch(
-          search({
-            searchId: (action.payload as any).searchId,
-            pageSize: 0,
-            page: 0,
-          }),
-        );
-      });
+      );
     }
   };
 
@@ -97,7 +80,7 @@ export const List = () => {
             style={{ margin: "5px" }}
             onClick={() => {
               dispatch(
-                create({
+                createRecord({
                   values: {
                     name: namor.generate({ words: 1, numbers: 0 }),
                     value: namor.generate({ words: 1, numbers: 0 }),
@@ -113,10 +96,10 @@ export const List = () => {
           <button
             type="button"
             style={{ margin: "5px" }}
-            disabled={!currentRecord && selectedRecords.length == 0}
+            disabled={!currentRecord && selectedRecords.length === 0}
             onClick={() => {
               dispatch(
-                remove(
+                deleteRecord(
                   currentRecord
                     ? { primaryKeys: [currentRecord.value] }
                     : { primaryKeys: selectedRecords.map((record) => record.value) },

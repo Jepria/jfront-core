@@ -17,7 +17,7 @@ const slice = createCrudSlice<string, Item>({
 const thunkCreators = slice.thunk;
 
 export const getRecordById = thunkCreators.getRecordByIdThunk(api);
-export const create = thunkCreators.createThunk(api);
-export const remove = thunkCreators.removeThunk(api);
+export const createRecord = thunkCreators.createThunk(api);
+export const deleteRecord = thunkCreators.deleteThunk(api);
 
 export const { name, actions, reducer } = slice;

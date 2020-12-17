@@ -71,7 +71,7 @@ export class ListSearchApi extends ConnectorSearch<Item, string> {
   ): Promise<Array<Item>> => {
     return new Promise((resolve, reject) => {
       const searchTemplate = this.searchMap.get(searchId);
-      if (searchTemplate != undefined) {
+      if (searchTemplate !== undefined) {
         resolve(findByName(searchTemplate));
       } else {
         throw new Error("no template");

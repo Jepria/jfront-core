@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { AppState } from "../../app/store/reducer";
 import { actions as crudActions } from "../state/listCrudSlice";
-import { search, postSearchTemplate } from "../state/listSearchSlice";
+import { search, postSearch } from "../state/listSearchSlice";
 
 export const ListPage = () => {
   const { records, searchId, searchTemplate, isLoading } = useSelector(
@@ -26,39 +26,27 @@ export const ListPage = () => {
       );
     } else if (searchTemplate) {
       dispatch(
-        postSearchTemplate({
+        postSearch({
           searchTemplate,
+          pageSize: 0,
+          page: 0,
         }),
-      ).then((action) => {
-        dispatch(
-          search({
-            searchId: (action.payload as any).searchId,
-            pageSize: 0,
-            page: 0,
-          }),
-        );
-      });
+      );
     } else {
       dispatch(
-        postSearchTemplate({
+        postSearch({
           searchTemplate: {
             template: "",
           },
+          pageSize: 0,
+          page: 0,
         }),
-      ).then((action) => {
-        dispatch(
-          search({
-            searchId: (action.payload as any).searchId,
-            pageSize: 0,
-            page: 0,
-          }),
-        );
-      });
+      );
     }
   };
 
   useEffect(() => {
-    if (records.length == 0) {
+    if (records.length === 0) {
       dispatchSearch();
     }
   }, []);

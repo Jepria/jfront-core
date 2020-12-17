@@ -123,7 +123,7 @@ export const List = () => {
                 ? [currentRecord.value]
                 : selectedRecords.map((record) => record.value);
               dispatch(
-                crudActions.remove({
+                crudActions.delete({
                   primaryKeys,
                   callback: () => {
                     dispatchSearch();
