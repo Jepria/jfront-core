@@ -101,7 +101,8 @@ export const createSearchSlice = <
           dispatch(actions.postSearchRequestSuccess(result));
           return result;
         } catch (error) {
-          return actions.failure({ error });
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
         }
       };
     };
@@ -127,7 +128,8 @@ export const createSearchSlice = <
           dispatch(actions.searchSuccess(result));
           return result;
         } catch (error) {
-          return actions.failure({ error });
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
         }
       };
     };
@@ -158,8 +160,6 @@ export const createSearchSlice = <
   };
 
   const createSagaMiddleware = (api: ConnectorSearch<Entity, SearchTemplate>) => {
-    const actions = slice.actions as any;
-
     function* postSearchRequest(action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
       try {
         const searchId = yield call(api.postSearchRequest, action.payload.searchTemplate);

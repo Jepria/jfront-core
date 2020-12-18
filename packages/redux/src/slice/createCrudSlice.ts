@@ -112,7 +112,8 @@ export const createCrudSlice = <
           dispatch(actions.getRecordByIdSuccess({ record }));
           return record;
         } catch (error) {
-          return actions.failure({ error });
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
         }
       };
     };
@@ -127,9 +128,10 @@ export const createCrudSlice = <
           dispatch(actions.create(payload));
           const record = await api.create(payload.values);
           dispatch(actions.createSuccess({ record }));
-          return record;
+          return record as Entity;
         } catch (error) {
-          return actions.failure({ error });
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
         }
       };
     };
@@ -144,9 +146,10 @@ export const createCrudSlice = <
           dispatch(actions.update(payload));
           const record = await api.update(String(payload.primaryKey), payload.values);
           dispatch(actions.updateSuccess({ record }));
-          return record;
+          return record as Entity;
         } catch (error) {
-          return actions.failure({ error });
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
         }
       };
     };
@@ -165,7 +168,8 @@ export const createCrudSlice = <
           await Promise.all(promises);
           dispatch(actions.deleteSuccess());
         } catch (error) {
-          return actions.failure({ error });
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
         }
       };
     };
