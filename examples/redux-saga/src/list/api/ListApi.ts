@@ -129,7 +129,7 @@ export class ListCrudApi extends ConnectorCrud<Item, Item, Item> {
    */
   getRecordById = (id: string): Promise<Item> => {
     return new Promise((resolve, reject) => {
-      resolve(findByValue(id));
+      resolve(findByValue(id) as Item);
     });
   };
 }

@@ -1,15 +1,17 @@
 import {
+  Action,
   ActionReducerMapBuilder,
   CaseReducers,
-  createAsyncThunk,
   createSlice,
   PayloadAction,
   SliceCaseReducers,
+  ThunkAction,
   ValidateSliceCaseReducers,
 } from "@reduxjs/toolkit";
-import { ConnectorSearch, SearchRequest } from "@jfront/core-rest";
+import { ConnectorSearch } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
 import {
+  PostSearchAction,
   PostSearchRequestAction,
   PostSearchRequestSuccessAction,
   SearchAction,
@@ -73,76 +75,91 @@ export const createSearchSlice = <
       ...reducers,
     },
     extraReducers: {
-      [name + "/postSearchTemplateThunk/pending"]: (state) => {
-        state.isLoading = true;
-      },
-      [name + "/postSearchTemplateThunk/fulfilled"]: (state, action) => {
-        state.isLoading = false;
-        state.searchTemplate = action.payload.searchTemplate;
-        state.searchId = action.payload.searchId;
-      },
-      [name + "/postSearchTemplateThunk/rejected"]: (state, action) => {
-        state.isLoading = false;
-        state.error = action.error;
-      },
-      [name + "/searchThunk/pending"]: (state) => {
-        state.isLoading = true;
-      },
-      [name + "/searchThunk/fulfilled"]: (state, action) => {
-        state.isLoading = false;
-        state.records = action.payload.records;
-        state.resultSetSize = action.payload.resultSetSize;
-      },
-      [name + "/searchThunk/rejected"]: (state, action) => {
-        state.isLoading = false;
-        state.error = action.error;
-      },
       ...extraReducers,
     },
   });
 
-  const postSearchTemplateThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
-    return createAsyncThunk<
-      PostSearchRequestSuccessAction<SearchTemplate>,
-      PostSearchRequestAction<SearchTemplate>
-    >(name + "/postSearchTemplateThunk", async (payload, { rejectWithValue }) => {
-      try {
-        const searchId = await api.postSearchRequest(payload.searchTemplate);
-        return {
-          searchTemplate: payload.searchTemplate,
-          searchId,
-        };
-      } catch (error) {
-        return rejectWithValue(error);
-      }
-    });
+  const actions = slice.actions as any; //cast to any, unknown TS issue
+
+  const postSearchRequestThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+    return function (
+      payload: PostSearchRequestAction<SearchTemplate>,
+    ): ThunkAction<
+      Promise<PostSearchRequestSuccessAction<SearchTemplate>>,
+      S,
+      unknown,
+      Action<string>
+    > {
+      return async (dispatch) => {
+        try {
+          dispatch(actions.postSearchRequest(payload));
+          const searchId = await api.postSearchRequest(payload.searchTemplate);
+          const result = {
+            searchTemplate: payload.searchTemplate,
+            searchId,
+          };
+          dispatch(actions.postSearchRequestSuccess(result));
+          return result;
+        } catch (error) {
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
+        }
+      };
+    };
   };
 
   const searchThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
-    return createAsyncThunk<SearchSuccessAction<Entity>, SearchAction>(
-      name + "/searchThunk",
-      async (payload, { rejectWithValue }) => {
+    return function (
+      payload: SearchAction,
+    ): ThunkAction<Promise<SearchSuccessAction<Entity>>, S, unknown, Action<string>> {
+      return async (dispatch) => {
         try {
+          dispatch(actions.search(payload));
           const response = await api.search(
             String(payload.searchId),
             payload.pageSize,
             payload.page,
           );
           const resultSetSize = await api.getResultSetSize(String(payload.searchId));
-          return {
+          const result = {
             records: response,
             resultSetSize,
           };
+          dispatch(actions.searchSuccess(result));
+          return result;
         } catch (error) {
-          return rejectWithValue(error);
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
         }
-      },
-    );
+      };
+    };
+  };
+
+  const postSearchThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+    return function (
+      payload: PostSearchAction<SearchTemplate>,
+    ): ThunkAction<Promise<SearchSuccessAction<Entity>>, S, unknown, Action<string>> {
+      const postSearchRequest = postSearchRequestThunk(api);
+      const search = searchThunk(api);
+      return async (dispatch) => {
+        return dispatch(
+          postSearchRequest({
+            searchTemplate: payload.searchTemplate,
+          }),
+        ).then((action) => {
+          return dispatch(
+            search({
+              searchId: action.searchId,
+              pageSize: payload.pageSize,
+              page: payload.page,
+            }),
+          );
+        });
+      };
+    };
   };
 
   const createSagaMiddleware = (api: ConnectorSearch<Entity, SearchTemplate>) => {
-    const actions = slice.actions as any;
-
     function* postSearchRequest(action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
       try {
         const searchId = yield call(api.postSearchRequest, action.payload.searchTemplate);
@@ -190,8 +207,9 @@ export const createSearchSlice = <
     actions: slice.actions,
     reducer: slice.reducer,
     thunk: {
-      postSearchTemplateThunk,
+      postSearchRequestThunk,
       searchThunk,
+      postSearchThunk,
     },
     createSagaMiddleware,
   };

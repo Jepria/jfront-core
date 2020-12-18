@@ -20,6 +20,12 @@ export interface SearchAction {
   page: number;
 }
 
+export interface PostSearchAction<V> {
+  searchTemplate: SearchRequest<V>;
+  pageSize: number;
+  page: number;
+}
+
 export interface SearchSuccessAction<T> {
   records: T[];
   resultSetSize: number;
