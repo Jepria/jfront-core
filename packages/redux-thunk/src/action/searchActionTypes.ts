@@ -6,7 +6,6 @@ export interface SetSearchTemplateAction<V> {
 
 export interface PostSearchRequestAction<V> {
   searchTemplate: SearchRequest<V>;
-  callback?: (searchId: string) => void;
 }
 
 export interface PostSearchRequestSuccessAction<V> {

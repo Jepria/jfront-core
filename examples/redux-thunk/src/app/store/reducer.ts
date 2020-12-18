@@ -1,4 +1,4 @@
-import { EntityState, SearchState } from "@jfront/core-redux";
+import { EntityState, SearchState } from "@jfront/core-redux-thunk";
 import { combineReducers, Reducer } from "@reduxjs/toolkit";
 import { initialEntityState, reducer as crudReducer } from "../../list/state/listCrudSlice";
 import { initialSearchState, reducer as searchReducer } from "../../list/state/listSearchSlice";

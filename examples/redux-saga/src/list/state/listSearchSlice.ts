@@ -1,4 +1,4 @@
-import { createSearchSlice, SearchState } from "@jfront/core-redux";
+import { createSearchSlice, SearchState } from "@jfront/core-redux-saga";
 import { ListSearchApi } from "../api/ListApi";
 import { Item } from "../types";
 

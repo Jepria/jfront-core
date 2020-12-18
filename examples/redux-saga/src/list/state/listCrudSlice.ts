@@ -1,4 +1,4 @@
-import { createCrudSlice, EntityState } from "@jfront/core-redux";
+import { createCrudSlice, EntityState } from "@jfront/core-redux-saga";
 import { ListCrudApi } from "../api/ListApi";
 import { Item } from "../types";
 

@@ -1,6 +1,5 @@
 export interface CreateAction<T> {
   values: T;
-  callback?: (record: any) => void;
 }
 
 export interface CreateSuccessAction<T> {
@@ -10,7 +9,6 @@ export interface CreateSuccessAction<T> {
 export interface UpdateAction<P, T> {
   primaryKey: P;
   values: T;
-  callback?: (record: any) => void;
 }
 
 export interface UpdateSuccessAction<T> {
@@ -19,12 +17,10 @@ export interface UpdateSuccessAction<T> {
 
 export interface DeleteAction<P> {
   primaryKeys: P[];
-  callback?: () => void;
 }
 
 export interface GetRecordByIdAction<P> {
   primaryKey: P;
-  callback?: (record: any) => void;
 }
 
 export interface GetRecordByIdActionSuccess<T> {

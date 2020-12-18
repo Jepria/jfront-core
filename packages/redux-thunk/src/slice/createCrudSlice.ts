@@ -22,7 +22,6 @@ import {
   UpdateSuccessAction,
 } from "../action/crudActionTypes";
 import { EntityState } from "../types";
-import { put, call, all, takeEvery } from "redux-saga/effects";
 
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
@@ -175,73 +174,6 @@ export const createCrudSlice = <
     };
   };
 
-  const createSagaMiddleware = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    function* create(action: PayloadAction<CreateAction<CreateEntity>>) {
-      try {
-        const createdRecord = yield call(api.create, action.payload.values);
-        yield put(actions.createSuccess({ record: createdRecord }));
-        if (action.payload.callback) {
-          yield call(action.payload.callback, createdRecord);
-        }
-      } catch (error) {
-        yield put(actions.failure({ error: error }));
-      }
-    }
-
-    function* update(action: PayloadAction<UpdateAction<PrimaryKey, UpdateEntity>>) {
-      try {
-        const updatedRecord = yield call(
-          api.update,
-          String(action.payload.primaryKey),
-          action.payload.values,
-        );
-        yield put(actions.updateSuccess({ record: updatedRecord }));
-        if (action.payload.callback) {
-          yield call(action.payload.callback, updatedRecord);
-        }
-      } catch (error) {
-        yield put(actions.failure({ error: error }));
-      }
-    }
-
-    function* _delete(action: PayloadAction<DeleteAction<PrimaryKey>>) {
-      try {
-        yield all(
-          action.payload.primaryKeys.map((primaryKey) => call(api.delete, String(primaryKey))),
-        );
-        yield put(actions.deleteSuccess());
-        if (action.payload.callback) {
-          yield call(action.payload.callback);
-        }
-      } catch (error) {
-        yield put(actions.failure({ error: error }));
-      }
-    }
-
-    function* getRecordById(action: PayloadAction<GetRecordByIdAction<PrimaryKey>>) {
-      try {
-        const record = yield call(api.getRecordById, String(action.payload.primaryKey));
-        yield put(actions.getRecordByIdSuccess({ record }));
-        if (action.payload.callback) {
-          yield call(action.payload.callback, record);
-        }
-      } catch (error) {
-        yield put(actions.failure({ error: error }));
-      }
-    }
-
-    function* entityWatcher() {
-      yield takeEvery(actions.create.type, create);
-      yield takeEvery(actions.update.type, update);
-      yield takeEvery(actions.delete.type, _delete);
-      yield takeEvery(actions.getRecordById, getRecordById);
-    }
-
-    return function* saga() {
-      yield entityWatcher();
-    };
-  };
-
   return {
     name: slice.name,
     actions: slice.actions,
@@ -252,6 +184,5 @@ export const createCrudSlice = <
       createThunk,
       getRecordByIdThunk,
     },
-    createSagaMiddleware,
   };
 };

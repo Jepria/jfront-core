@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@jfront/core-redux": "^0.0.1",
+    "@jfront/core-redux-thunk": "^0.0.1",
     "@jfront/core-rest": "^0.1.0-rc.0",
     "react": "16.13.1",
     "react-dom": "16.13.1"
