@@ -5,8 +5,6 @@ import {
   PayloadAction,
   ActionReducerMapBuilder,
   CaseReducers,
-  ThunkAction,
-  Action,
 } from "@reduxjs/toolkit";
 import { ConnectorCrud } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
@@ -72,7 +70,7 @@ export const createCrudSlice = <
         state.isLoading = false;
         state.currentRecord = action.payload.record;
       },
-      getRecordById(state: S, action: PayloadAction<GetRecordByIdAction<PrimaryKey>>) {
+      getRecordById(state: S, action: PayloadAction<GetRecordByIdAction<PrimaryKey, Entity>>) {
         state.isLoading = true;
       },
       getRecordByIdSuccess(state: S, action: PayloadAction<GetRecordByIdActionSuccess<Entity>>) {
@@ -101,90 +99,19 @@ export const createCrudSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const getRecordByIdThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return function (
-      payload: GetRecordByIdAction<PrimaryKey>,
-    ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
-      return async (dispatch) => {
-        try {
-          dispatch(actions.getRecordById(payload));
-          const record = await api.getRecordById(String(payload.primaryKey));
-          dispatch(actions.getRecordByIdSuccess({ record }));
-          return record;
-        } catch (error) {
-          dispatch(actions.failure({ error }));
-          return Promise.reject(error);
-        }
-      };
-    };
-  };
-
-  const createThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return function (
-      payload: CreateAction<CreateEntity>,
-    ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
-      return async (dispatch) => {
-        try {
-          dispatch(actions.create(payload));
-          const record = await api.create(payload.values);
-          dispatch(actions.createSuccess({ record }));
-          return record as Entity;
-        } catch (error) {
-          dispatch(actions.failure({ error }));
-          return Promise.reject(error);
-        }
-      };
-    };
-  };
-
-  const updateThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return function (
-      payload: UpdateAction<PrimaryKey, UpdateEntity>,
-    ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
-      return async (dispatch) => {
-        try {
-          dispatch(actions.update(payload));
-          const record = await api.update(String(payload.primaryKey), payload.values);
-          dispatch(actions.updateSuccess({ record }));
-          return record as Entity;
-        } catch (error) {
-          dispatch(actions.failure({ error }));
-          return Promise.reject(error);
-        }
-      };
-    };
-  };
-
-  const deleteThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
-    return function (
-      payload: DeleteAction<PrimaryKey>,
-    ): ThunkAction<Promise<void>, S, unknown, Action<string>> {
-      return async (dispatch) => {
-        try {
-          dispatch(actions.delete(payload));
-          // build promise array
-          const promises = payload.primaryKeys.map((primaryKey) => api.delete(String(primaryKey)));
-          // wait for all finish
-          await Promise.all(promises);
-          dispatch(actions.deleteSuccess());
-        } catch (error) {
-          dispatch(actions.failure({ error }));
-          return Promise.reject(error);
-        }
-      };
-    };
-  };
-
   const createSagaMiddleware = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
     function* create(action: PayloadAction<CreateAction<CreateEntity>>) {
       try {
         const createdRecord = yield call(api.create, action.payload.values);
         yield put(actions.createSuccess({ record: createdRecord }));
-        if (action.payload.callback) {
-          yield call(action.payload.callback, createdRecord);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, createdRecord);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
+        }
       }
     }
 
@@ -196,11 +123,14 @@ export const createCrudSlice = <
           action.payload.values,
         );
         yield put(actions.updateSuccess({ record: updatedRecord }));
-        if (action.payload.callback) {
-          yield call(action.payload.callback, updatedRecord);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, updatedRecord);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
+        }
       }
     }
 
@@ -210,23 +140,41 @@ export const createCrudSlice = <
           action.payload.primaryKeys.map((primaryKey) => call(api.delete, String(primaryKey))),
         );
         yield put(actions.deleteSuccess());
-        if (action.payload.callback) {
-          yield call(action.payload.callback);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
+        }
       }
     }
 
-    function* getRecordById(action: PayloadAction<GetRecordByIdAction<PrimaryKey>>) {
+    function* getRecordById(action: PayloadAction<GetRecordByIdAction<PrimaryKey, Entity>>) {
       try {
         const record = yield call(api.getRecordById, String(action.payload.primaryKey));
         yield put(actions.getRecordByIdSuccess({ record }));
-        if (action.payload.callback) {
-          yield call(action.payload.callback, record);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, record);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
+        }
+      }
+    }
+
+    function* setCurrentRecord(action: PayloadAction<SetCurrentRecordAction<Entity>>) {
+      if (action.payload.callback) {
+        yield call(action.payload.callback, action.payload.currentRecord);
+      }
+    }
+
+    function* selectRecords(action: PayloadAction<SelectRecordsAction<Entity>>) {
+      if (action.payload.callback) {
+        yield call(action.payload.callback, action.payload.selectedRecords);
       }
     }
 
@@ -234,7 +182,9 @@ export const createCrudSlice = <
       yield takeEvery(actions.create.type, create);
       yield takeEvery(actions.update.type, update);
       yield takeEvery(actions.delete.type, _delete);
-      yield takeEvery(actions.getRecordById, getRecordById);
+      yield takeEvery(actions.getRecordById.type, getRecordById);
+      yield takeEvery(actions.setCurrentRecord.type, setCurrentRecord);
+      yield takeEvery(actions.selectRecords.type, selectRecords);
     }
 
     return function* saga() {
@@ -246,12 +196,6 @@ export const createCrudSlice = <
     name: slice.name,
     actions: slice.actions,
     reducer: slice.reducer,
-    thunk: {
-      deleteThunk,
-      updateThunk,
-      createThunk,
-      getRecordByIdThunk,
-    },
     createSagaMiddleware,
   };
 };

@@ -20,19 +20,12 @@ export const List = () => {
     },
     onSubmit: (values) => {
       dispatch(
-        searchActions.postSearchRequest({
+        searchActions.postSearch({
           searchTemplate: {
             template: values.name,
           },
-          callback: (searchId) => {
-            dispatch(
-              searchActions.search({
-                searchId,
-                pageSize: 0,
-                page: 0,
-              }),
-            );
-          },
+          pageSize: 0,
+          page: 0,
         }),
       );
     },
@@ -49,34 +42,20 @@ export const List = () => {
       );
     } else if (searchTemplate) {
       dispatch(
-        searchActions.postSearchRequest({
+        searchActions.postSearch({
           searchTemplate,
-          callback: (searchId) => {
-            dispatch(
-              searchActions.search({
-                searchId,
-                pageSize: 0,
-                page: 0,
-              }),
-            );
-          },
+          pageSize: 0,
+          page: 0,
         }),
       );
     } else {
       dispatch(
-        searchActions.postSearchRequest({
+        searchActions.postSearch({
           searchTemplate: {
             template: "",
           },
-          callback: (searchId) => {
-            dispatch(
-              searchActions.search({
-                searchId,
-                pageSize: 0,
-                page: 0,
-              }),
-            );
-          },
+          pageSize: 0,
+          page: 0,
         }),
       );
     }
@@ -105,7 +84,7 @@ export const List = () => {
                     name: namor.generate({ words: 1, numbers: 0 }),
                     value: namor.generate({ words: 1, numbers: 0 }),
                   },
-                  callback: () => {
+                  onSuccess: () => {
                     dispatchSearch();
                   },
                 }),
@@ -125,7 +104,7 @@ export const List = () => {
               dispatch(
                 crudActions.delete({
                   primaryKeys,
-                  callback: () => {
+                  onSuccess: () => {
                     dispatchSearch();
                   },
                 }),

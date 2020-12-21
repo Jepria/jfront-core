@@ -1,11 +1,9 @@
 import {
-  Action,
   ActionReducerMapBuilder,
   CaseReducers,
   createSlice,
   PayloadAction,
   SliceCaseReducers,
-  ThunkAction,
   ValidateSliceCaseReducers,
 } from "@reduxjs/toolkit";
 import { ConnectorSearch } from "@jfront/core-rest";
@@ -61,13 +59,16 @@ export const createSearchSlice = <
         state.searchTemplate = action.payload.searchTemplate;
         state.searchId = action.payload.searchId;
       },
-      search(state: S, action: PayloadAction<SearchAction>) {
+      search(state: S, action: PayloadAction<SearchAction<Entity>>) {
         state.isLoading = true;
       },
       searchSuccess(state: S, action: PayloadAction<SearchSuccessAction<Entity>>) {
         state.isLoading = false;
         state.records = action.payload.records;
         state.resultSetSize = action.payload.resultSetSize;
+      },
+      postSearch(state: S, action: PayloadAction<PostSearchAction<SearchTemplate, Entity>>) {
+        state.isLoading = true;
       },
       failure(state: S, action: FailureAction<any>) {
         state.error = action.error;
@@ -81,103 +82,28 @@ export const createSearchSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const postSearchRequestThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
-    return function (
-      payload: PostSearchRequestAction<SearchTemplate>,
-    ): ThunkAction<
-      Promise<PostSearchRequestSuccessAction<SearchTemplate>>,
-      S,
-      unknown,
-      Action<string>
-    > {
-      return async (dispatch) => {
-        try {
-          dispatch(actions.postSearchRequest(payload));
-          const searchId = await api.postSearchRequest(payload.searchTemplate);
-          const result = {
-            searchTemplate: payload.searchTemplate,
-            searchId,
-          };
-          dispatch(actions.postSearchRequestSuccess(result));
-          return result;
-        } catch (error) {
-          dispatch(actions.failure({ error }));
-          return Promise.reject(error);
-        }
-      };
-    };
-  };
-
-  const searchThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
-    return function (
-      payload: SearchAction,
-    ): ThunkAction<Promise<SearchSuccessAction<Entity>>, S, unknown, Action<string>> {
-      return async (dispatch) => {
-        try {
-          dispatch(actions.search(payload));
-          const response = await api.search(
-            String(payload.searchId),
-            payload.pageSize,
-            payload.page,
-          );
-          const resultSetSize = await api.getResultSetSize(String(payload.searchId));
-          const result = {
-            records: response,
-            resultSetSize,
-          };
-          dispatch(actions.searchSuccess(result));
-          return result;
-        } catch (error) {
-          dispatch(actions.failure({ error }));
-          return Promise.reject(error);
-        }
-      };
-    };
-  };
-
-  const postSearchThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
-    return function (
-      payload: PostSearchAction<SearchTemplate>,
-    ): ThunkAction<Promise<SearchSuccessAction<Entity>>, S, unknown, Action<string>> {
-      const postSearchRequest = postSearchRequestThunk(api);
-      const search = searchThunk(api);
-      return async (dispatch) => {
-        return dispatch(
-          postSearchRequest({
-            searchTemplate: payload.searchTemplate,
-          }),
-        ).then((action) => {
-          return dispatch(
-            search({
-              searchId: action.searchId,
-              pageSize: payload.pageSize,
-              page: payload.page,
-            }),
-          );
-        });
-      };
-    };
-  };
-
   const createSagaMiddleware = (api: ConnectorSearch<Entity, SearchTemplate>) => {
     function* postSearchRequest(action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
       try {
         const searchId = yield call(api.postSearchRequest, action.payload.searchTemplate);
-        yield put(
-          actions.postSearchRequestSuccess({
-            searchId,
-            searchTemplate: action.payload.searchTemplate,
-          }),
-        );
-        if (action.payload.callback) {
-          yield call(action.payload.callback, searchId);
+        const result = {
+          searchId,
+          searchTemplate: action.payload.searchTemplate,
+        };
+        yield put(actions.postSearchRequestSuccess(result));
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, result);
         }
+        return result;
       } catch (error) {
         yield put(actions.failure({ error }));
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
+        }
       }
     }
 
-    function* search(action: PayloadAction<SearchAction>) {
+    function* search(action: PayloadAction<SearchAction<Entity>>) {
       try {
         const records = yield call(
           api.search,
@@ -187,14 +113,40 @@ export const createSearchSlice = <
         );
         const resultSetSize = yield call(api.getResultSetSize, action.payload.searchId);
         yield put(actions.searchSuccess({ records, resultSetSize }));
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, { records, resultSetSize });
+        }
       } catch (error) {
         yield put(actions.failure({ error }));
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
+        }
       }
+    }
+
+    function* postSearch(action: PayloadAction<PostSearchAction<SearchTemplate, Entity>>) {
+      const payload = yield call(postSearchRequest, {
+        type: actions.postSearchRequest.type,
+        payload: {
+          searchTemplate: action.payload.searchTemplate,
+          onFailure: action.payload.onFailure,
+        },
+      });
+      yield put(
+        actions.search({
+          searchId: payload.searchId,
+          pageSize: action.payload.pageSize,
+          page: action.payload.page,
+          onSuccess: action.payload.onSuccess,
+          onFailure: action.payload.onFailure,
+        }),
+      );
     }
 
     function* searchWatcher() {
       yield takeLatest(actions.postSearchRequest.type, postSearchRequest);
       yield takeLatest(actions.search.type, search);
+      yield takeLatest(actions.postSearch.type, postSearch);
     }
 
     return function* saga() {
@@ -206,11 +158,6 @@ export const createSearchSlice = <
     name: slice.name,
     actions: slice.actions,
     reducer: slice.reducer,
-    thunk: {
-      postSearchRequestThunk,
-      searchThunk,
-      postSearchThunk,
-    },
     createSagaMiddleware,
   };
 };
