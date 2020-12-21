@@ -84,7 +84,7 @@ export const List = () => {
                     name: namor.generate({ words: 1, numbers: 0 }),
                     value: namor.generate({ words: 1, numbers: 0 }),
                   },
-                  successCb: () => {
+                  onSuccess: () => {
                     dispatchSearch();
                   },
                 }),
@@ -104,7 +104,7 @@ export const List = () => {
               dispatch(
                 crudActions.delete({
                   primaryKeys,
-                  successCb: () => {
+                  onSuccess: () => {
                     dispatchSearch();
                   },
                 }),

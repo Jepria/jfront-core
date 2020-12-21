@@ -1,7 +1,7 @@
 export interface CreateAction<T> {
   values: T;
-  successCb?: (record: any) => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: (record: any) => void;
+  onFailure?: (error: any) => void;
 }
 
 export interface CreateSuccessAction<T> {
@@ -11,8 +11,8 @@ export interface CreateSuccessAction<T> {
 export interface UpdateAction<P, T> {
   primaryKey: P;
   values: T;
-  successCb?: (record: any) => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: (record: any) => void;
+  onFailure?: (error: any) => void;
 }
 
 export interface UpdateSuccessAction<T> {
@@ -21,14 +21,14 @@ export interface UpdateSuccessAction<T> {
 
 export interface DeleteAction<P> {
   primaryKeys: P[];
-  successCb?: () => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: () => void;
+  onFailure?: (error: any) => void;
 }
 
 export interface GetRecordByIdAction<P, T> {
   primaryKey: P;
-  successCb?: (record: T) => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: (record: T) => void;
+  onFailure?: (error: any) => void;
 }
 
 export interface GetRecordByIdActionSuccess<T> {

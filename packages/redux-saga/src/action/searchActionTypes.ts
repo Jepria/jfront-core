@@ -2,14 +2,14 @@ import { SearchRequest } from "@jfront/core-rest";
 
 export interface SetSearchTemplateAction<V> {
   searchTemplate: SearchRequest<V>;
-  successCb?: () => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: () => void;
+  onFailure?: (error: any) => void;
 }
 
 export interface PostSearchRequestAction<V> {
   searchTemplate: SearchRequest<V>;
-  successCb?: (payload: PostSearchRequestSuccessAction<V>) => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: (payload: PostSearchRequestSuccessAction<V>) => void;
+  onFailure?: (error: any) => void;
 }
 
 export interface PostSearchRequestSuccessAction<V> {
@@ -21,8 +21,8 @@ export interface SearchAction<T> {
   searchId: string;
   pageSize: number;
   page: number;
-  successCb?: (payload: SearchSuccessAction<T>) => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: (payload: SearchSuccessAction<T>) => void;
+  onFailure?: (error: any) => void;
 }
 
 export interface SearchSuccessAction<T> {
@@ -34,6 +34,6 @@ export interface PostSearchAction<V, T> {
   searchTemplate: SearchRequest<V>;
   pageSize: number;
   page: number;
-  successCb?: (payload: SearchSuccessAction<T>) => void;
-  failureCb?: (error: any) => void;
+  onSuccess?: (payload: SearchSuccessAction<T>) => void;
+  onFailure?: (error: any) => void;
 }

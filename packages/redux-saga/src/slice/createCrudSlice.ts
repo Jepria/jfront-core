@@ -104,13 +104,13 @@ export const createCrudSlice = <
       try {
         const createdRecord = yield call(api.create, action.payload.values);
         yield put(actions.createSuccess({ record: createdRecord }));
-        if (action.payload.successCb) {
-          yield call(action.payload.successCb, createdRecord);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, createdRecord);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
-        if (action.payload.failureCb) {
-          yield call(action.payload.failureCb, error);
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
         }
       }
     }
@@ -123,13 +123,13 @@ export const createCrudSlice = <
           action.payload.values,
         );
         yield put(actions.updateSuccess({ record: updatedRecord }));
-        if (action.payload.successCb) {
-          yield call(action.payload.successCb, updatedRecord);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, updatedRecord);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
-        if (action.payload.failureCb) {
-          yield call(action.payload.failureCb, error);
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
         }
       }
     }
@@ -140,13 +140,13 @@ export const createCrudSlice = <
           action.payload.primaryKeys.map((primaryKey) => call(api.delete, String(primaryKey))),
         );
         yield put(actions.deleteSuccess());
-        if (action.payload.successCb) {
-          yield call(action.payload.successCb);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
-        if (action.payload.failureCb) {
-          yield call(action.payload.failureCb, error);
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
         }
       }
     }
@@ -155,13 +155,13 @@ export const createCrudSlice = <
       try {
         const record = yield call(api.getRecordById, String(action.payload.primaryKey));
         yield put(actions.getRecordByIdSuccess({ record }));
-        if (action.payload.successCb) {
-          yield call(action.payload.successCb, record);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, record);
         }
       } catch (error) {
         yield put(actions.failure({ error: error }));
-        if (action.payload.failureCb) {
-          yield call(action.payload.failureCb, error);
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
         }
       }
     }

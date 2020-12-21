@@ -91,14 +91,14 @@ export const createSearchSlice = <
           searchTemplate: action.payload.searchTemplate,
         };
         yield put(actions.postSearchRequestSuccess(result));
-        if (action.payload.successCb) {
-          yield call(action.payload.successCb, result);
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, result);
         }
         return result;
       } catch (error) {
         yield put(actions.failure({ error }));
-        if (action.payload.failureCb) {
-          yield call(action.payload.failureCb, error);
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
         }
       }
     }
@@ -113,13 +113,13 @@ export const createSearchSlice = <
         );
         const resultSetSize = yield call(api.getResultSetSize, action.payload.searchId);
         yield put(actions.searchSuccess({ records, resultSetSize }));
-        if (action.payload.successCb) {
-          yield call(action.payload.successCb, { records, resultSetSize });
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, { records, resultSetSize });
         }
       } catch (error) {
         yield put(actions.failure({ error }));
-        if (action.payload.failureCb) {
-          yield call(action.payload.failureCb, error);
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
         }
       }
     }
@@ -129,7 +129,7 @@ export const createSearchSlice = <
         type: actions.postSearchRequest.type,
         payload: {
           searchTemplate: action.payload.searchTemplate,
-          failureCb: action.payload.failureCb,
+          onFailure: action.payload.onFailure,
         },
       });
       yield put(
@@ -137,8 +137,8 @@ export const createSearchSlice = <
           searchId: payload.searchId,
           pageSize: action.payload.pageSize,
           page: action.payload.page,
-          successCb: action.payload.successCb,
-          failureCb: action.payload.failureCb,
+          onSuccess: action.payload.onSuccess,
+          onFailure: action.payload.onFailure,
         }),
       );
     }
