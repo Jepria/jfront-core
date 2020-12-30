@@ -4,16 +4,22 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { AppState } from "../../app/store/reducer";
 import { actions as crudActions } from "../state/listCrudSlice";
+import { getListOptions } from "../state/listOptionsSlice";
 import { search, postSearch } from "../state/listSearchSlice";
 
 export const ListPage = () => {
+  const dispatch = useAppDispatch();
+
   const { records, searchId, searchTemplate, isLoading } = useSelector(
     (state: AppState) => state.list.listSearchSlice,
   );
   const { selectedRecords, currentRecord } = useSelector(
     (state: AppState) => state.list.listCrudSlice,
   );
-  const dispatch = useAppDispatch();
+
+  const { error, options, isLoading: optionsIsLoading } = useSelector(
+    (state: AppState) => state.list.listOptionsSlice,
+  );
 
   const dispatchSearch = () => {
     if (searchId) {
@@ -51,8 +57,20 @@ export const ListPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    dispatch(getListOptions());
+  }, []);
+
   return (
     <>
+      <div>
+        {optionsIsLoading && <span>Loading</span>}
+        <select>
+          {options.map((option) => {
+            return <option>{option}</option>;
+          })}
+        </select>
+      </div>
       {isLoading && <span>Loading</span>}
       {!isLoading && (
         <table>
