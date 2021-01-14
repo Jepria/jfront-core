@@ -87,9 +87,9 @@ export const createCrudSlice = <
         state.currentRecord = undefined;
         state.selectedRecords = [];
       },
-      failure(state: S, action: FailureAction<any>) {
+      failure(state: S, action: PayloadAction<FailureAction<any>>) {
         state.isLoading = false;
-        state.error = action.error;
+        state.error = action.payload.error;
       },
       ...reducers,
     },
