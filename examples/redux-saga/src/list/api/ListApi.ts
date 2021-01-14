@@ -90,7 +90,7 @@ export class ListSearchApi extends ConnectorSearch<Item, string> {
   };
 }
 
-export class ListCrudApi extends ConnectorCrud<Item, Item, Item> {
+export class ListCrudApi extends ConnectorCrud<Item, string, Item, Item> {
   /**
    * Creating a new record.
    * @param {CreateDto} createDto record create DTO
