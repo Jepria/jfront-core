@@ -25,7 +25,7 @@ import { put, call, all, takeEvery } from "redux-saga/effects";
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
 export const createCrudSlice = <
-  PrimaryKey = any,
+  PrimaryKey = string,
   Entity = any,
   CreateEntity = Entity,
   UpdateEntity = Entity,
@@ -99,7 +99,9 @@ export const createCrudSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const createSagaMiddleware = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
+  const createSagaMiddleware = (
+    api: ConnectorCrud<Entity, PrimaryKey, CreateEntity, UpdateEntity>,
+  ) => {
     function* create(action: PayloadAction<CreateAction<CreateEntity>>) {
       try {
         const createdRecord = yield call(api.create, action.payload.values);
@@ -119,7 +121,7 @@ export const createCrudSlice = <
       try {
         const updatedRecord = yield call(
           api.update,
-          String(action.payload.primaryKey),
+          action.payload.primaryKey,
           action.payload.values,
         );
         yield put(actions.updateSuccess({ record: updatedRecord }));
@@ -136,9 +138,7 @@ export const createCrudSlice = <
 
     function* _delete(action: PayloadAction<DeleteAction<PrimaryKey>>) {
       try {
-        yield all(
-          action.payload.primaryKeys.map((primaryKey) => call(api.delete, String(primaryKey))),
-        );
+        yield all(action.payload.primaryKeys.map((primaryKey) => call(api.delete, primaryKey)));
         yield put(actions.deleteSuccess());
         if (action.payload.onSuccess) {
           yield call(action.payload.onSuccess);
@@ -153,7 +153,7 @@ export const createCrudSlice = <
 
     function* getRecordById(action: PayloadAction<GetRecordByIdAction<PrimaryKey, Entity>>) {
       try {
-        const record = yield call(api.getRecordById, String(action.payload.primaryKey));
+        const record = yield call(api.getRecordById, action.payload.primaryKey);
         yield put(actions.getRecordByIdSuccess({ record }));
         if (action.payload.onSuccess) {
           yield call(action.payload.onSuccess, record);

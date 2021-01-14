@@ -26,7 +26,7 @@ import { EntityState } from "../types";
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
 export const createCrudSlice = <
-  PrimaryKey = any,
+  PrimaryKey = string,
   Entity = any,
   CreateEntity = Entity,
   UpdateEntity = Entity,
@@ -100,14 +100,16 @@ export const createCrudSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const getRecordByIdThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
+  const getRecordByIdThunk = (
+    api: ConnectorCrud<Entity, PrimaryKey, CreateEntity, UpdateEntity>,
+  ) => {
     return function (
       payload: GetRecordByIdAction<PrimaryKey>,
     ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
       return async (dispatch) => {
         try {
           dispatch(actions.getRecordById(payload));
-          const record = await api.getRecordById(String(payload.primaryKey));
+          const record = await api.getRecordById(payload.primaryKey);
           dispatch(actions.getRecordByIdSuccess({ record }));
           return record;
         } catch (error) {
@@ -118,7 +120,7 @@ export const createCrudSlice = <
     };
   };
 
-  const createThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
+  const createThunk = (api: ConnectorCrud<Entity, PrimaryKey, CreateEntity, UpdateEntity>) => {
     return function (
       payload: CreateAction<CreateEntity>,
     ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
@@ -136,14 +138,14 @@ export const createCrudSlice = <
     };
   };
 
-  const updateThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
+  const updateThunk = (api: ConnectorCrud<Entity, PrimaryKey, CreateEntity, UpdateEntity>) => {
     return function (
       payload: UpdateAction<PrimaryKey, UpdateEntity>,
     ): ThunkAction<Promise<Entity>, S, unknown, Action<string>> {
       return async (dispatch) => {
         try {
           dispatch(actions.update(payload));
-          const record = await api.update(String(payload.primaryKey), payload.values);
+          const record = await api.update(payload.primaryKey, payload.values);
           dispatch(actions.updateSuccess({ record }));
           return record as Entity;
         } catch (error) {
@@ -154,7 +156,7 @@ export const createCrudSlice = <
     };
   };
 
-  const deleteThunk = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
+  const deleteThunk = (api: ConnectorCrud<Entity, PrimaryKey, CreateEntity, UpdateEntity>) => {
     return function (
       payload: DeleteAction<PrimaryKey>,
     ): ThunkAction<Promise<void>, S, unknown, Action<string>> {
@@ -162,7 +164,7 @@ export const createCrudSlice = <
         try {
           dispatch(actions.delete(payload));
           // build promise array
-          const promises = payload.primaryKeys.map((primaryKey) => api.delete(String(primaryKey)));
+          const promises = payload.primaryKeys.map((primaryKey) => api.delete(primaryKey));
           // wait for all finish
           await Promise.all(promises);
           dispatch(actions.deleteSuccess());
