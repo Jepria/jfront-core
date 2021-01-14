@@ -6,9 +6,11 @@ import { searchSaga } from "../../list/state/listSearchSlice";
 import { initialState, reducer } from "./reducer";
 import logger from "redux-logger";
 import { useDispatch } from "react-redux";
+import { listFilterOptionsSaga } from "../../list/state/listFilterOptionsSlice";
+import { listOptionsSaga } from "../../list/state/listOptionsSlice";
 
 function* rootSaga() {
-  yield all([crudSaga(), searchSaga()]);
+  yield all([crudSaga(), searchSaga(), listOptionsSaga(), listFilterOptionsSaga()]);
 }
 
 const configureStore = () => {

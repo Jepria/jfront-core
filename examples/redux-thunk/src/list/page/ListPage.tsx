@@ -5,7 +5,9 @@ import { useAppDispatch } from "../../app/store/configureStore";
 import { AppState } from "../../app/store/reducer";
 import { actions as crudActions } from "../state/listCrudSlice";
 import { getListOptions } from "../state/listOptionsSlice";
+import { getListFilterOptions } from "../state/listFilterOptionsSlice";
 import { search, postSearch } from "../state/listSearchSlice";
+import { ComboBox, ComboBoxItem } from "@jfront/ui-combobox";
 
 export const ListPage = () => {
   const dispatch = useAppDispatch();
@@ -16,9 +18,11 @@ export const ListPage = () => {
   const { selectedRecords, currentRecord } = useSelector(
     (state: AppState) => state.list.listCrudSlice,
   );
-
-  const { error, options, isLoading: optionsIsLoading } = useSelector(
+  const { options, isLoading: optionsIsLoading } = useSelector(
     (state: AppState) => state.list.listOptionsSlice,
+  );
+  const { options: filterOptions, isLoading: filterOptionsIsLoading } = useSelector(
+    (state: AppState) => state.list.listFilterOptionsSlice,
   );
 
   const dispatchSearch = () => {
@@ -61,6 +65,10 @@ export const ListPage = () => {
     dispatch(getListOptions());
   }, []);
 
+  useEffect(() => {
+    dispatch(getListFilterOptions(""));
+  }, []);
+
   return (
     <>
       <div>
@@ -70,6 +78,11 @@ export const ListPage = () => {
             return <option>{option}</option>;
           })}
         </select>
+        <ComboBox onInputChange={(text) => dispatch(getListFilterOptions(text.target.value))}>
+          {filterOptions.map((option) => (
+            <ComboBoxItem label={option} value={option} />
+          ))}
+        </ComboBox>
       </div>
       {isLoading && <span>Loading</span>}
       {!isLoading && (

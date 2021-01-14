@@ -49,12 +49,14 @@ export const createOptionsSlice = <
 
   const actions = slice.actions as any;
 
-  const getOptions = (apiGetOptions: () => T[]) => {
-    return function (): ThunkAction<Promise<any>, OptionState<T>, unknown, Action<string>> {
+  const getOptions = (apiGetOptions: (...parameters: any) => T[]) => {
+    return function (
+      ...parameters: any
+    ): ThunkAction<Promise<any>, OptionState<T>, unknown, Action<string>> {
       return async (dispatch) => {
         try {
           dispatch(actions.getOptionsStart());
-          const options = await apiGetOptions();
+          const options = await apiGetOptions(parameters);
           dispatch(actions.getOptionsSuccess(options));
         } catch (error) {
           return dispatch(actions.getOptionsFailure(error));
