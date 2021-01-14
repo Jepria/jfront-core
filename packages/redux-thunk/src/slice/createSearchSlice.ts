@@ -48,9 +48,11 @@ export const createSearchSlice = <
     reducers: {
       setSearchTemplate(state: S, action: PayloadAction<SetSearchTemplateAction<SearchTemplate>>) {
         state.searchTemplate = action.payload.searchTemplate;
+        state.searchId = undefined;
       },
       postSearchRequest(state: S, action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
         state.isLoading = true;
+        state.searchId = undefined;
       },
       postSearchRequestSuccess(
         state: S,
@@ -68,8 +70,9 @@ export const createSearchSlice = <
         state.records = action.payload.records;
         state.resultSetSize = action.payload.resultSetSize;
       },
-      failure(state: S, action: FailureAction<any>) {
-        state.error = action.error;
+      failure(state: S, action: PayloadAction<FailureAction<any>>) {
+        state.isLoading = false;
+        state.error = action.payload.error;
       },
       ...reducers,
     },

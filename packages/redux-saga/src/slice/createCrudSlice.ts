@@ -86,9 +86,9 @@ export const createCrudSlice = <
         state.currentRecord = undefined;
         state.selectedRecords = [];
       },
-      failure(state: S, action: FailureAction<any>) {
+      failure(state: S, action: PayloadAction<FailureAction<any>>) {
         state.isLoading = false;
-        state.error = action.error;
+        state.error = action.payload.error;
       },
       ...reducers,
     },
@@ -178,17 +178,15 @@ export const createCrudSlice = <
       }
     }
 
-    function* entityWatcher() {
-      yield takeEvery(actions.create.type, create);
-      yield takeEvery(actions.update.type, update);
-      yield takeEvery(actions.delete.type, _delete);
-      yield takeEvery(actions.getRecordById.type, getRecordById);
-      yield takeEvery(actions.setCurrentRecord.type, setCurrentRecord);
-      yield takeEvery(actions.selectRecords.type, selectRecords);
-    }
-
     return function* saga() {
-      yield entityWatcher();
+      yield all([
+        yield takeEvery(actions.create.type, create),
+        yield takeEvery(actions.update.type, update),
+        yield takeEvery(actions.delete.type, _delete),
+        yield takeEvery(actions.getRecordById.type, getRecordById),
+        yield takeEvery(actions.setCurrentRecord.type, setCurrentRecord),
+        yield takeEvery(actions.selectRecords.type, selectRecords),
+      ]);
     };
   };
 
