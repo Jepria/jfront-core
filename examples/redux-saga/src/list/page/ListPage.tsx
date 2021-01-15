@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../app/store/reducer";
 import { actions as crudActions } from "../state/listCrudSlice";
 import { actions as searchActions } from "../state/listSearchSlice";
+import { actions as optionActions } from "../state/listOptionsSlice";
+import { actions as filterOptionActions } from "../state/listFilterOptionsSlice";
+import { ComboBox, ComboBoxItem } from "@jfront/ui-combobox";
 
 export const ListPage = () => {
   const { records, isLoading, searchId, searchTemplate } = useSelector(
@@ -11,6 +14,12 @@ export const ListPage = () => {
   );
   const { selectedRecords, currentRecord } = useSelector(
     (state: AppState) => state.list.listCrudSlice,
+  );
+  const { options, isLoading: optionsIsLoading } = useSelector(
+    (state: AppState) => state.list.listOptionsSlice,
+  );
+  const { options: filterOptions, isLoading: filterOptionsIsLoading } = useSelector(
+    (state: AppState) => state.list.listFilterOptionsSlice,
   );
   const dispatch = useDispatch();
 
@@ -50,8 +59,33 @@ export const ListPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    dispatch(optionActions.getOptionsStart({}));
+  }, []);
+
+  useEffect(() => {
+    dispatch(filterOptionActions.getOptionsStart({ params: "" }));
+  }, []);
+
   return (
     <>
+      <div>
+        {optionsIsLoading && <span>Loading</span>}
+        <select>
+          {options.map((option) => {
+            return <option>{option}</option>;
+          })}
+        </select>
+        <ComboBox
+          onInputChange={(text) =>
+            dispatch(filterOptionActions.getOptionsStart({ params: [text.target.value] }))
+          }
+        >
+          {filterOptions.map((option) => (
+            <ComboBoxItem label={option} value={option} />
+          ))}
+        </ComboBox>
+      </div>
       {isLoading && <span>Loading</span>}
       {!isLoading && (
         <table>
