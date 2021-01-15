@@ -28,7 +28,7 @@ export interface GetRecordByIdActionSuccess<T> {
 }
 
 export interface SetCurrentRecordAction<T> {
-  currentRecord: T;
+  currentRecord?: T;
 }
 
 export interface SelectRecordsAction<T> {

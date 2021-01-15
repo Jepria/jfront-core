@@ -2,8 +2,7 @@ import { SearchRequest } from "@jfront/core-rest";
 
 export interface SetSearchTemplateAction<V> {
   searchTemplate: SearchRequest<V>;
-  onSuccess?: () => void;
-  onFailure?: (error: any) => void;
+  callback?: (searchTemplate?: SearchRequest<V>) => void;
 }
 
 export interface PostSearchRequestAction<V> {

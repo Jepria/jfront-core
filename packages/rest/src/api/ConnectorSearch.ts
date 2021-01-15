@@ -4,9 +4,9 @@ import { buildError, handleAxiosError } from "./Errors";
 import { AxiosResponse, AxiosError } from "axios";
 
 /**
- * Standard jepria-rest CRUD RESTful API connector.
+ * Standard jepria-rest Search RESTful API connector.
  * @example
- * let connector: ConnectorCrud<Dto, CreateDto, UpdateDto, Template> = new ConnectorCrud("http://localhost:8080/feature/api/feature");
+ * let connector: ConnectorSearch<Dto, SearchTemplate> = new ConnectorSearch("http://localhost:8080/feature/api/feature");
  */
 export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
   private axios = this.getAxios();
@@ -18,24 +18,23 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
    */
   postSearchRequest = (searchRequest: SearchRequest<SearchTemplate>, cacheControl = "no-cache") => {
     return new Promise<string>((resolve, reject) => {
-      this.axios.post(
-        this.baseUrl + "/search",
-        searchRequest,
-        {
+      this.axios
+        .post(this.baseUrl + "/search", searchRequest, {
           headers: {
-            "Accept": "application/json;charset=utf-8",
+            Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
             "Cache-Control": cacheControl,
           },
-        },
-      ).then((response: AxiosResponse<any>) => {
-        if (response.status === 201) {
-          const location: string = response.headers["location"];
-          resolve(location.split("/").pop());
-        } else {
-          reject(buildError(response));
-        }
-      }).catch((error: AxiosError) => reject(handleAxiosError(error)));
+        })
+        .then((response: AxiosResponse<any>) => {
+          if (response.status === 201) {
+            const location: string = response.headers["location"];
+            resolve(location.split("/").pop() as string);
+          } else {
+            reject(buildError(response));
+          }
+        })
+        .catch((error: AxiosError) => reject(handleAxiosError(error)));
     });
   };
 
@@ -46,26 +45,31 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
    * @param {number} page page number
    * @param {string} cacheControl Cache-control header value
    */
-  search = (searchId: string, pageSize: number, page: number, cacheControl = "no-cache"): Promise<Array<Dto>> => {
+  search = (
+    searchId: string,
+    pageSize: number,
+    page: number,
+    cacheControl = "no-cache",
+  ): Promise<Array<Dto>> => {
     return new Promise<Array<Dto>>((resolve, reject) => {
-      this.axios.get(
-        this.baseUrl + `/search/${searchId}/resultset?pageSize=${pageSize}&page=${page}`,
-        {
+      this.axios
+        .get(this.baseUrl + `/search/${searchId}/resultset?pageSize=${pageSize}&page=${page}`, {
           headers: {
-            "Accept": "application/json;charset=utf-8",
+            Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
             "Cache-Control": cacheControl,
           },
-        },
-      ).then((response: AxiosResponse<any>) => {
-        if (response.status === 200) {
-          resolve(response.data);
-        } else if (response.status === 204) {
-          resolve([]);
-        } else {
-          reject(buildError(response));
-        }
-      }).catch((error: AxiosError) => reject(handleAxiosError(error)));
+        })
+        .then((response: AxiosResponse<any>) => {
+          if (response.status === 200) {
+            resolve(response.data);
+          } else if (response.status === 204) {
+            resolve([]);
+          } else {
+            reject(buildError(response));
+          }
+        })
+        .catch((error: AxiosError) => reject(handleAxiosError(error)));
     });
   };
 
@@ -76,22 +80,22 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
    */
   getResultSetSize = (searchId: string, cacheControl = "no-cache"): Promise<number> => {
     return new Promise<number>((resolve, reject) => {
-      this.axios.get(
-        this.baseUrl + `/search/${searchId}/resultset-size`,
-        {
+      this.axios
+        .get(this.baseUrl + `/search/${searchId}/resultset-size`, {
           headers: {
-            "Accept": "application/json;charset=utf-8",
+            Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
             "Cache-Control": cacheControl,
           },
-        },
-      ).then((response: AxiosResponse<any>) => {
-        if (response.status === 200) {
-          resolve(response.data);
-        } else {
-          reject(buildError(response));
-        }
-      }).catch((error: AxiosError) => reject(handleAxiosError(error)));
+        })
+        .then((response: AxiosResponse<any>) => {
+          if (response.status === 200) {
+            resolve(response.data);
+          } else {
+            reject(buildError(response));
+          }
+        })
+        .catch((error: AxiosError) => reject(handleAxiosError(error)));
     });
   };
 }
