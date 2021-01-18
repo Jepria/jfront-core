@@ -36,8 +36,8 @@ export interface GetRecordByIdActionSuccess<T> {
 }
 
 export interface SetCurrentRecordAction<T> {
-  currentRecord: T;
-  callback?: (record: T) => void;
+  currentRecord?: T;
+  callback?: (record?: T) => void;
 }
 
 export interface SelectRecordsAction<T> {

@@ -17,7 +17,7 @@ import {
   SetSearchTemplateAction,
 } from "../action/searchActionTypes";
 import { SearchState } from "../types";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
@@ -47,9 +47,11 @@ export const createSearchSlice = <
     reducers: {
       setSearchTemplate(state: S, action: PayloadAction<SetSearchTemplateAction<SearchTemplate>>) {
         state.searchTemplate = action.payload.searchTemplate;
+        state.searchId = undefined;
       },
       postSearchRequest(state: S, action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
         state.isLoading = true;
+        state.searchId = undefined;
       },
       postSearchRequestSuccess(
         state: S,
@@ -70,8 +72,9 @@ export const createSearchSlice = <
       postSearch(state: S, action: PayloadAction<PostSearchAction<SearchTemplate, Entity>>) {
         state.isLoading = true;
       },
-      failure(state: S, action: FailureAction<any>) {
-        state.error = action.error;
+      failure(state: S, action: PayloadAction<FailureAction<any>>) {
+        state.isLoading = false;
+        state.error = action.payload.error;
       },
       ...reducers,
     },
@@ -83,6 +86,12 @@ export const createSearchSlice = <
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
   const createSagaMiddleware = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+    function* setSearchTemplate(action: PayloadAction<SetSearchTemplateAction<SearchTemplate>>) {
+      if (action.payload.callback) {
+        yield call(action.payload.callback, action.payload.searchTemplate);
+      }
+    }
+
     function* postSearchRequest(action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
       try {
         const searchId = yield call(api.postSearchRequest, action.payload.searchTemplate);
@@ -143,14 +152,13 @@ export const createSearchSlice = <
       );
     }
 
-    function* searchWatcher() {
-      yield takeLatest(actions.postSearchRequest.type, postSearchRequest);
-      yield takeLatest(actions.search.type, search);
-      yield takeLatest(actions.postSearch.type, postSearch);
-    }
-
     return function* saga() {
-      yield searchWatcher();
+      yield all([
+        yield takeEvery(actions.setSearchTemplate.type, setSearchTemplate),
+        yield takeLatest(actions.postSearchRequest.type, postSearchRequest),
+        yield takeLatest(actions.search.type, search),
+        yield takeLatest(actions.postSearch.type, postSearch),
+      ]);
     };
   };
 

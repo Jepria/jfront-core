@@ -25,7 +25,7 @@ import { put, call, all, takeEvery } from "redux-saga/effects";
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
 export const createCrudSlice = <
-  PrimaryKey = any,
+  PrimaryKey = string,
   Entity = any,
   CreateEntity = Entity,
   UpdateEntity = Entity,
@@ -86,9 +86,9 @@ export const createCrudSlice = <
         state.currentRecord = undefined;
         state.selectedRecords = [];
       },
-      failure(state: S, action: FailureAction<any>) {
+      failure(state: S, action: PayloadAction<FailureAction<any>>) {
         state.isLoading = false;
-        state.error = action.error;
+        state.error = action.payload.error;
       },
       ...reducers,
     },
@@ -99,7 +99,9 @@ export const createCrudSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const createSagaMiddleware = (api: ConnectorCrud<Entity, CreateEntity, UpdateEntity>) => {
+  const createSagaMiddleware = (
+    api: ConnectorCrud<Entity, PrimaryKey, CreateEntity, UpdateEntity>,
+  ) => {
     function* create(action: PayloadAction<CreateAction<CreateEntity>>) {
       try {
         const createdRecord = yield call(api.create, action.payload.values);
@@ -119,7 +121,7 @@ export const createCrudSlice = <
       try {
         const updatedRecord = yield call(
           api.update,
-          String(action.payload.primaryKey),
+          action.payload.primaryKey,
           action.payload.values,
         );
         yield put(actions.updateSuccess({ record: updatedRecord }));
@@ -136,9 +138,7 @@ export const createCrudSlice = <
 
     function* _delete(action: PayloadAction<DeleteAction<PrimaryKey>>) {
       try {
-        yield all(
-          action.payload.primaryKeys.map((primaryKey) => call(api.delete, String(primaryKey))),
-        );
+        yield all(action.payload.primaryKeys.map((primaryKey) => call(api.delete, primaryKey)));
         yield put(actions.deleteSuccess());
         if (action.payload.onSuccess) {
           yield call(action.payload.onSuccess);
@@ -153,7 +153,7 @@ export const createCrudSlice = <
 
     function* getRecordById(action: PayloadAction<GetRecordByIdAction<PrimaryKey, Entity>>) {
       try {
-        const record = yield call(api.getRecordById, String(action.payload.primaryKey));
+        const record = yield call(api.getRecordById, action.payload.primaryKey);
         yield put(actions.getRecordByIdSuccess({ record }));
         if (action.payload.onSuccess) {
           yield call(action.payload.onSuccess, record);
@@ -178,17 +178,15 @@ export const createCrudSlice = <
       }
     }
 
-    function* entityWatcher() {
-      yield takeEvery(actions.create.type, create);
-      yield takeEvery(actions.update.type, update);
-      yield takeEvery(actions.delete.type, _delete);
-      yield takeEvery(actions.getRecordById.type, getRecordById);
-      yield takeEvery(actions.setCurrentRecord.type, setCurrentRecord);
-      yield takeEvery(actions.selectRecords.type, selectRecords);
-    }
-
     return function* saga() {
-      yield entityWatcher();
+      yield all([
+        yield takeEvery(actions.create.type, create),
+        yield takeEvery(actions.update.type, update),
+        yield takeEvery(actions.delete.type, _delete),
+        yield takeEvery(actions.getRecordById.type, getRecordById),
+        yield takeEvery(actions.setCurrentRecord.type, setCurrentRecord),
+        yield takeEvery(actions.selectRecords.type, selectRecords),
+      ]);
     };
   };
 
