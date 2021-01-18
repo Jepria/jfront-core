@@ -1,13 +1,15 @@
 {
   "name": "jfront-core-redux-saga",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@jfront/core-redux-saga": "^0.0.1",
+    "@jfront/core-redux-saga": "^0.1.0",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
   "devDependencies": {
+    "@jfront/ui-combobox": "0.4.3",
+    "@reduxjs/toolkit": "1.5.0",
     "@testing-library/jest-dom": "^5.7.0",
     "@testing-library/react": "^10.4.7",
     "@types/jest": "^26.0.0",
@@ -17,17 +19,15 @@
     "@types/redux-logger": "3.0.7",
     "core-js": "^3.6.4",
     "eslint-config-react-app": "^5.2.1",
-    "react-app-polyfill": "^1.0.6",
-    "react-scripts": "^3.4.1",
-    "typescript": "^3.9.6",
-    "redux": "4.0.5",
-    "@reduxjs/toolkit": "1.5.0",
-    "react-redux": "7.2.1",
-    "redux-saga": "1.1.3",
     "formik": "2.2.5",
     "namor": "2.0.2",
+    "react-app-polyfill": "^1.0.6",
+    "react-redux": "7.2.1",
+    "react-scripts": "^3.4.1",
+    "redux": "4.0.5",
     "redux-logger": "3.0.6",
-    "@jfront/ui-combobox": "0.4.3"
+    "redux-saga": "1.1.3",
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "start": "react-scripts start",
