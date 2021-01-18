@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.1.0...@jfront/core-redux-saga@0.1.1) (2021-01-18)
+
+
+### Bug Fixes
+
+* delete success action set isLoading to false ([e5e360e](https://github.com/Jepria/jfront-core/commit/e5e360e90fe3838ddca8234730d8efd8dbb1d5b5))
+
+
+
+
+
 # 0.1.0 (2021-01-18)
 
 
