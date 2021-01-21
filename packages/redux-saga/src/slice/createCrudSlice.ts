@@ -76,7 +76,7 @@ export const createCrudSlice = <
       getRecordByIdSuccess(state: S, action: PayloadAction<GetRecordByIdActionSuccess<Entity>>) {
         state.isLoading = false;
         state.currentRecord = action.payload.record;
-        state.selectedRecords = [];
+        state.selectedRecords = [action.payload.record];
       },
       delete(state: S, action: PayloadAction<DeleteAction<PrimaryKey>>) {
         state.isLoading = true;
