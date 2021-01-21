@@ -9,7 +9,7 @@ import { actions as filterOptionActions } from "../state/listFilterOptionsSlice"
 import { ComboBox, ComboBoxItem } from "@jfront/ui-combobox";
 
 export const ListPage = () => {
-  const { records, isLoading, searchId, searchTemplate } = useSelector(
+  const { records, isLoading, searchId, searchRequest } = useSelector(
     (state: AppState) => state.list.listSearchSlice,
   );
   const { selectedRecords, currentRecord } = useSelector(
@@ -29,15 +29,15 @@ export const ListPage = () => {
         searchActions.search({
           searchId: searchId,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
-    } else if (searchTemplate) {
+    } else if (searchRequest) {
       dispatch(
         searchActions.postSearch({
-          searchTemplate,
+          searchTemplate: searchRequest,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     } else {
@@ -47,7 +47,7 @@ export const ListPage = () => {
             template: "",
           },
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     }

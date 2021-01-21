@@ -10,7 +10,9 @@ export type EntityState<T> = {
 export type SearchState<V, T> = {
   isLoading: boolean;
   searchId?: string;
-  searchTemplate?: SearchRequest<V>;
+  searchRequest?: SearchRequest<V>;
+  pageSize: number;
+  pageNumber: number;
   resultSetSize?: number;
   records: T[];
   error?: any;

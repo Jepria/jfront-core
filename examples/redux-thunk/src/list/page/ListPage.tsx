@@ -12,7 +12,7 @@ import { ComboBox, ComboBoxItem } from "@jfront/ui-combobox";
 export const ListPage = () => {
   const dispatch = useAppDispatch();
 
-  const { records, searchId, searchTemplate, isLoading } = useSelector(
+  const { records, searchId, searchRequest, isLoading } = useSelector(
     (state: AppState) => state.list.listSearchSlice,
   );
   const { selectedRecords, currentRecord } = useSelector(
@@ -31,15 +31,15 @@ export const ListPage = () => {
         search({
           searchId: searchId,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
-    } else if (searchTemplate) {
+    } else if (searchRequest) {
       dispatch(
         postSearch({
-          searchTemplate,
+          searchTemplate: searchRequest,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     } else {
@@ -49,7 +49,7 @@ export const ListPage = () => {
             template: "",
           },
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     }

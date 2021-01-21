@@ -9,7 +9,7 @@ import { createRecord, deleteRecord } from "./state/listCrudSlice";
 import { useAppDispatch } from "../app/store/configureStore";
 
 export const List = () => {
-  const { searchId, searchTemplate } = useSelector((state: AppState) => state.list.listSearchSlice);
+  const { searchId, searchRequest } = useSelector((state: AppState) => state.list.listSearchSlice);
   const { selectedRecords, currentRecord } = useSelector(
     (state: AppState) => state.list.listCrudSlice,
   );
@@ -26,7 +26,7 @@ export const List = () => {
             template: values.name,
           },
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     },
@@ -38,15 +38,15 @@ export const List = () => {
         search({
           searchId: searchId,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
-    } else if (searchTemplate) {
+    } else if (searchRequest) {
       dispatch(
         postSearch({
-          searchTemplate,
+          searchTemplate: searchRequest,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     } else {
@@ -56,7 +56,7 @@ export const List = () => {
             template: "",
           },
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     }

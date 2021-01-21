@@ -46,7 +46,7 @@ export const createSearchSlice = <
     initialState,
     reducers: {
       setSearchTemplate(state: S, action: PayloadAction<SetSearchTemplateAction<SearchTemplate>>) {
-        state.searchTemplate = action.payload.searchTemplate;
+        state.searchRequest = action.payload.searchTemplate;
         state.searchId = undefined;
       },
       postSearchRequest(state: S, action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
@@ -58,11 +58,13 @@ export const createSearchSlice = <
         action: PayloadAction<PostSearchRequestSuccessAction<SearchTemplate>>,
       ) {
         state.isLoading = false;
-        state.searchTemplate = action.payload.searchTemplate;
+        state.searchRequest = action.payload.searchTemplate;
         state.searchId = action.payload.searchId;
       },
       search(state: S, action: PayloadAction<SearchAction<Entity>>) {
         state.isLoading = true;
+        state.pageNumber = action.payload.pageNumber;
+        state.pageSize = action.payload.pageSize;
       },
       searchSuccess(state: S, action: PayloadAction<SearchSuccessAction<Entity>>) {
         state.isLoading = false;
@@ -118,7 +120,7 @@ export const createSearchSlice = <
           api.search,
           action.payload.searchId,
           action.payload.pageSize,
-          action.payload.page,
+          action.payload.pageNumber,
         );
         const resultSetSize = yield call(api.getResultSetSize, action.payload.searchId);
         yield put(actions.searchSuccess({ records, resultSetSize }));
@@ -145,7 +147,7 @@ export const createSearchSlice = <
         actions.search({
           searchId: payload.searchId,
           pageSize: action.payload.pageSize,
-          page: action.payload.page,
+          page: action.payload.pageNumber,
           onSuccess: action.payload.onSuccess,
           onFailure: action.payload.onFailure,
         }),

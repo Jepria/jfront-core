@@ -1,9 +1,9 @@
 {
   "name": "jfront-core-redux-saga",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
-    "@jfront/core-redux-saga": "^0.1.1",
+    "@jfront/core-redux-saga": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },

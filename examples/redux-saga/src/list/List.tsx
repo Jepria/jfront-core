@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import namor from "namor";
 
 export const List = () => {
-  const { searchTemplate, searchId } = useSelector((state: AppState) => state.list.listSearchSlice);
+  const { searchRequest, searchId } = useSelector((state: AppState) => state.list.listSearchSlice);
   const { selectedRecords, currentRecord } = useSelector(
     (state: AppState) => state.list.listCrudSlice,
   );
@@ -25,7 +25,7 @@ export const List = () => {
             template: values.name,
           },
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     },
@@ -37,15 +37,15 @@ export const List = () => {
         searchActions.search({
           searchId: searchId,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
-    } else if (searchTemplate) {
+    } else if (searchRequest) {
       dispatch(
         searchActions.postSearch({
-          searchTemplate,
+          searchTemplate: searchRequest,
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     } else {
@@ -55,7 +55,7 @@ export const List = () => {
             template: "",
           },
           pageSize: 0,
-          page: 0,
+          pageNumber: 0,
         }),
       );
     }

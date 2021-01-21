@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.1.1...@jfront/core-redux-saga@0.2.0) (2021-01-21)
+
+
+### Bug Fixes
+
+* change name searchTemplate -> searchRequest in SearchState. Added pageSize, pageNumber ([be56b36](https://github.com/Jepria/jfront-core/commit/be56b36a33847dd947fc6e954b38bf72567a0753))
+
+
+### Features
+
+* selected records are filled with record found in getRecordById ([c391c2b](https://github.com/Jepria/jfront-core/commit/c391c2b0f9a692d1e78d0b3241b69704f14a84b9))
+
+
+
+
+
 ## [0.1.1](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.1.0...@jfront/core-redux-saga@0.1.1) (2021-01-18)
 
 
