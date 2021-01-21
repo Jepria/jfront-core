@@ -83,7 +83,7 @@ export const createCrudSlice = <
         state.isLoading = true;
       },
       deleteSuccess(state: S) {
-        state.isLoading = true;
+        state.isLoading = false;
         state.currentRecord = undefined;
         state.selectedRecords = [];
       },
