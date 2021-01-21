@@ -4,6 +4,8 @@ import { Item } from "../types";
 
 export const initialSearchState: SearchState<string, Item> = {
   isLoading: false,
+  pageSize: 25,
+  pageNumber: 1,
   records: [],
 };
 

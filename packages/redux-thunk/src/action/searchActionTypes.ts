@@ -16,13 +16,13 @@ export interface PostSearchRequestSuccessAction<V> {
 export interface SearchAction {
   searchId: string;
   pageSize: number;
-  page: number;
+  pageNumber: number;
 }
 
 export interface PostSearchAction<V> {
   searchTemplate: SearchRequest<V>;
   pageSize: number;
-  page: number;
+  pageNumber: number;
 }
 
 export interface SearchSuccessAction<T> {

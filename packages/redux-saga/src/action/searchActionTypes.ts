@@ -19,7 +19,7 @@ export interface PostSearchRequestSuccessAction<V> {
 export interface SearchAction<T> {
   searchId: string;
   pageSize: number;
-  page: number;
+  pageNumber: number;
   onSuccess?: (payload: SearchSuccessAction<T>) => void;
   onFailure?: (error: any) => void;
 }
@@ -32,7 +32,7 @@ export interface SearchSuccessAction<T> {
 export interface PostSearchAction<V, T> {
   searchTemplate: SearchRequest<V>;
   pageSize: number;
-  page: number;
+  pageNumber: number;
   onSuccess?: (payload: SearchSuccessAction<T>) => void;
   onFailure?: (error: any) => void;
 }
