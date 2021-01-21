@@ -47,7 +47,7 @@ export const createSearchSlice = <
     initialState,
     reducers: {
       setSearchTemplate(state: S, action: PayloadAction<SetSearchTemplateAction<SearchTemplate>>) {
-        state.searchTemplate = action.payload.searchTemplate;
+        state.searchRequest = action.payload.searchTemplate;
         state.searchId = undefined;
       },
       postSearchRequest(state: S, action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
@@ -59,11 +59,13 @@ export const createSearchSlice = <
         action: PayloadAction<PostSearchRequestSuccessAction<SearchTemplate>>,
       ) {
         state.isLoading = false;
-        state.searchTemplate = action.payload.searchTemplate;
+        state.searchRequest = action.payload.searchTemplate;
         state.searchId = action.payload.searchId;
       },
       search(state: S, action: PayloadAction<SearchAction>) {
         state.isLoading = true;
+        state.pageNumber = action.payload.pageNumber;
+        state.pageSize = action.payload.pageSize;
       },
       searchSuccess(state: S, action: PayloadAction<SearchSuccessAction<Entity>>) {
         state.isLoading = false;
@@ -120,7 +122,7 @@ export const createSearchSlice = <
           const response = await api.search(
             String(payload.searchId),
             payload.pageSize,
-            payload.page,
+            payload.pageNumber,
           );
           const resultSetSize = await api.getResultSetSize(String(payload.searchId));
           const result = {
@@ -153,7 +155,7 @@ export const createSearchSlice = <
             search({
               searchId: action.searchId,
               pageSize: payload.pageSize,
-              page: payload.page,
+              pageNumber: payload.pageNumber,
             }),
           );
         });
