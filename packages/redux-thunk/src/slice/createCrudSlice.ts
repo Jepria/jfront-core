@@ -57,29 +57,29 @@ export const createCrudSlice = <
       selectRecords(state: S, action: PayloadAction<SelectRecordsAction<Entity>>) {
         state.selectedRecords = action.payload.selectedRecords;
       },
-      create(state: S, action: PayloadAction<CreateAction<CreateEntity>>) {
+      create(state: S) {
         state.isLoading = true;
       },
       createSuccess(state: S, action: PayloadAction<CreateSuccessAction<Entity>>) {
         state.isLoading = false;
         state.currentRecord = action.payload.record;
       },
-      update(state: S, action: PayloadAction<UpdateAction<PrimaryKey, UpdateEntity>>) {
+      update(state: S) {
         state.isLoading = true;
       },
       updateSuccess(state: S, action: PayloadAction<UpdateSuccessAction<Entity>>) {
         state.isLoading = false;
         state.currentRecord = action.payload.record;
       },
-      getRecordById(state: S, action: PayloadAction<GetRecordByIdAction<PrimaryKey>>) {
+      getRecordById(state: S) {
         state.isLoading = true;
       },
       getRecordByIdSuccess(state: S, action: PayloadAction<GetRecordByIdActionSuccess<Entity>>) {
         state.isLoading = false;
         state.currentRecord = action.payload.record;
-        state.selectedRecords = [];
+        state.selectedRecords = [action.payload.record];
       },
-      delete(state: S, action: PayloadAction<DeleteAction<PrimaryKey>>) {
+      delete(state: S) {
         state.isLoading = true;
       },
       deleteSuccess(state: S) {
