@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.1.1...@jfront/core-redux-thunk@0.1.2) (2021-01-21)
+
+
+### Bug Fixes
+
+* change name searchTemplate -> searchRequest in SearchState. Added pageSize, pageNumber ([be56b36](https://github.com/Jepria/jfront-core/commit/be56b36a33847dd947fc6e954b38bf72567a0753))
+* change name searchTemplate -> searchRequest in SearchState. Added pageSize, pageNumber ([86a921c](https://github.com/Jepria/jfront-core/commit/86a921c55c6b30275a2af7eb4bb313a05b9f79d6))
+* in reducer getRecordByIdSuccess changed selectedRecords value ([1b94173](https://github.com/Jepria/jfront-core/commit/1b941737f2d3e3f7c464f7c4492df4f7065dc982))
+
+
+
+
+
 ## [0.1.1](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.1.0...@jfront/core-redux-thunk@0.1.1) (2021-01-18)
 
 
