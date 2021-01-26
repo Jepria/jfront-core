@@ -13,7 +13,7 @@ const ListOptionsSlice = createOptionsSlice({
 });
 
 export const listOptionsSaga = ListOptionsSlice.createSagaMiddleware(() => {
-  return ["test1", "test2"];
+  return new Promise((resolve) => resolve(["test1", "test2"]));
 });
 
 export const { name, actions, reducer } = ListOptionsSlice;

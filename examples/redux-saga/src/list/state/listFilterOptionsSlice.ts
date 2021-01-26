@@ -13,7 +13,9 @@ const ListOptionsSlice = createOptionsSlice({
 });
 
 export const listFilterOptionsSaga = ListOptionsSlice.createSagaMiddleware((name: string) => {
-  return ["test1", "test2", "test3", "test4", "test5"].filter((text) => text.startsWith(name));
+  return new Promise((resolve) =>
+    resolve(["test1", "test2", "test3", "test4", "test5"].filter((text) => text.startsWith(name))),
+  );
 });
 
 export const { name, actions, reducer } = ListOptionsSlice;
