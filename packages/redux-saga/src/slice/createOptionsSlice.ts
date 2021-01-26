@@ -10,7 +10,7 @@ import { FailureAction, GetOptionsAction, GetOptionsActionSuccess } from "../act
 export interface OptionState<T> {
   options: T[];
   isLoading: boolean;
-  error: string;
+  error?: any;
 }
 
 export const createOptionsSlice = <
@@ -49,7 +49,7 @@ export const createOptionsSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const createSagaMiddleware = (apiGetOptions: (...parameters: any) => T[]) => {
+  const createSagaMiddleware = (apiGetOptions: (...parameters: any) => Promise<T[]>) => {
     function* getOptions(action: PayloadAction<GetOptionsAction>) {
       try {
         let result;

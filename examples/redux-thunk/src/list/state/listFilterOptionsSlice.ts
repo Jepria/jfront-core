@@ -13,10 +13,9 @@ const ListOptionsSlice = createOptionsSlice({
 });
 
 export const getListFilterOptions = ListOptionsSlice.thunk.getOptions((name: string) => {
-  // setTimeout(() => {
-  //   return ["test1", "test2"];
-  // }, 1000)
-  return ["test1", "test2", "test3", "test4", "test5"].filter((text) => text.startsWith(name));
+  return new Promise((resolve) =>
+    resolve(["test1", "test2", "test3", "test4", "test5"].filter((text) => text.startsWith(name))),
+  );
 });
 
 export const { name, actions, reducer } = ListOptionsSlice;

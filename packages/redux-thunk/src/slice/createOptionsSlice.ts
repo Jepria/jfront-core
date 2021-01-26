@@ -10,7 +10,7 @@ import {
 export interface OptionState<T> {
   options: T[];
   isLoading: boolean;
-  error: string;
+  error?: any;
 }
 
 export const createOptionsSlice = <
@@ -49,7 +49,7 @@ export const createOptionsSlice = <
 
   const actions = slice.actions as any;
 
-  const getOptions = (apiGetOptions: (...parameters: any) => T[]) => {
+  const getOptions = (apiGetOptions: (...parameters: any) => Promise<T[]>) => {
     return function (
       ...parameters: any
     ): ThunkAction<Promise<any>, OptionState<T>, unknown, Action<string>> {

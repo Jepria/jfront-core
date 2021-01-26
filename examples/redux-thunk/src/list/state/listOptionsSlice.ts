@@ -13,10 +13,7 @@ const ListOptionsSlice = createOptionsSlice({
 });
 
 export const getListOptions = ListOptionsSlice.thunk.getOptions(() => {
-  // setTimeout(() => {
-  //   return ["test1", "test2"];
-  // }, 1000)
-  return ["test1", "test2"];
+  return new Promise((resolve) => resolve(["test1", "test2"]));
 });
 
 export const { name, actions, reducer } = ListOptionsSlice;
