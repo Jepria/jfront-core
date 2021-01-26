@@ -10,7 +10,7 @@ import {
 export interface OptionState<T> {
   options: T[];
   isLoading: boolean;
-  error: string;
+  error?: any;
 }
 
 export const createOptionsSlice = <
