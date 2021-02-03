@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.2.0...@jfront/core-redux-saga@0.2.1) (2021-01-26)
+
+
+### Bug Fixes
+
+* createOptionSlice Promise ([e26ad0d](https://github.com/Jepria/jfront-core/commit/e26ad0d83b8dd79641d580922bbac93bc5521c9a))
+* error has any type and is optional ([8dcb783](https://github.com/Jepria/jfront-core/commit/8dcb783bc1616df591b33003f9abf7e213bea8ed))
+
+
+
+
+
 # [0.2.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.1.1...@jfront/core-redux-saga@0.2.0) (2021-01-21)
 
 

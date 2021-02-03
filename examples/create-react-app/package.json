@@ -1,9 +1,9 @@
 {
   "name": "jfront-core-cra",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "dependencies": {
-    "@jfront/core-rest": "^0.1.2",
+    "@jfront/core-rest": "^0.1.3",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
