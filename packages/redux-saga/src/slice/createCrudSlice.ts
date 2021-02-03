@@ -62,6 +62,7 @@ export const createCrudSlice = <
       createSuccess(state: S, action: PayloadAction<CreateSuccessAction<Entity>>) {
         state.isLoading = false;
         state.currentRecord = action.payload.record;
+        state.selectedRecords = [action.payload.record];
       },
       update(state: S, action: PayloadAction<UpdateAction<PrimaryKey, UpdateEntity>>) {
         state.isLoading = true;
