@@ -1,10 +1,10 @@
 {
   "name": "jfront-core-redux-thunk",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "dependencies": {
-    "@jfront/core-redux-thunk": "^0.1.3",
-    "@jfront/core-rest": "^0.1.3",
+    "@jfront/core-redux-thunk": "^0.1.4",
+    "@jfront/core-rest": "^0.1.4",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
