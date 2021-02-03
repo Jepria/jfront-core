@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.1.3...@jfront/core-redux-thunk@0.1.4) (2021-02-03)
+
+
+### Bug Fixes
+
+* created record added to selectedRecords after create success ([34e7dca](https://github.com/Jepria/jfront-core/commit/34e7dcafa876e11863ac208eeef06282bf1c410b))
+
+
+
+
+
 ## [0.1.3](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.1.2...@jfront/core-redux-thunk@0.1.3) (2021-01-26)
 
 
