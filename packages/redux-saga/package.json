@@ -28,14 +28,8 @@
     "@jfront/core-rest": "^0.1.4"
   },
   "peerDependencies": {
-    "@reduxjs/toolkit": "1.x.x",
-    "redux": "4.x.x",
-    "redux-saga": "1.x.x"
-  },
-  "devDependencies": {
-    "@reduxjs/toolkit": "1.4.0",
-    "@types/styled-components": "^5.0.1",
-    "redux": "4.0.5",
-    "redux-saga": "1.1.3"
+    "@reduxjs/toolkit": "^1.5.0",
+    "redux": "^4.0.5",
+    "redux-saga": "^1.1.3"
   }
 }
