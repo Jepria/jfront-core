@@ -27,7 +27,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
           },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.status === 201) {
+          if (response?.status === 201) {
             const location: string = response.headers["location"];
             resolve(location.split("/").pop() as string);
           } else {
@@ -54,7 +54,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
           },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.status === 200) {
+          if (response?.status === 200) {
             resolve(response.data);
           } else {
             reject(buildError(response));
@@ -87,9 +87,9 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
           },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.status === 200) {
+          if (response?.status === 200) {
             resolve(response.data);
-          } else if (response.status === 204) {
+          } else if (response?.status === 204) {
             resolve([]);
           } else {
             reject(buildError(response));
@@ -115,7 +115,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
           },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.status === 200) {
+          if (response?.status === 200) {
             resolve(response.data);
           } else {
             reject(buildError(response));

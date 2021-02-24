@@ -77,7 +77,7 @@ export const buildError = (response: AxiosResponse): NetworkError => {
         type: SERVER_ERROR,
         errorId: response?.data?.errorId,
         errorCode: response?.data?.errorCode || response?.status,
-        errorMessage: response?.data?.errorMessage,
+        errorMessage: response?.data?.errorMessage || response?.data,
       };
       break;
     }
