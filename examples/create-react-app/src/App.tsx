@@ -18,14 +18,14 @@ function App() {
       </button>
       <button
         onClick={() => {
-          chieldApi.getRecordById("147", "19").then(console.log);
+          chieldApi.getRecordById("147", "feature/19/feature-process").then(console.log);
         }}
       >
         Get child
       </button>
       <button
         onClick={() => {
-          chieldApi.getAll("19").then(console.log);
+          chieldApi.getAll("feature/19/feature-process").then(console.log);
         }}
       >
         Get all child

@@ -3,8 +3,7 @@ import { ConnectorChield } from "@jfront/core-rest";
 
 class ChieldFeatureApi extends ConnectorChield<Feature, string, FeatureCreate, FeatureUpdate> {
   constructor(baseUrl: string) {
-    baseUrl = baseUrl + "/feature";
-    super(baseUrl, "feature-process");
+    super(baseUrl);
   }
 }
 

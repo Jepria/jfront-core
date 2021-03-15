@@ -14,31 +14,21 @@ export class ConnectorChield<
   UpdateDto = Dto
 > extends ConnectorBase {
   private axios = this.getAxios();
-  private childUrl: string;
-  constructor(
-    baseUrl: string,
-    childUrl: string,
-    withCredentials = true,
-    axiosInstance?: AxiosInstance,
-  ) {
+  constructor(baseUrl: string, withCredentials = true, axiosInstance?: AxiosInstance) {
     super(baseUrl, withCredentials, axiosInstance);
-    this.childUrl = childUrl;
   }
 
   /**
    * Creating a new record.
    * @param {CreateDto} createDto record create DTO
+   * @param {string} path path e.g. feature/1/feature-process/
    * @param {boolean} getRecordById optional flag, if true getRecordById will be called after create (default true).
    * @returns {Promise<Dto | string>} Promise with DTO or string ID of created record, if getRecordById===false
    */
-  create = (
-    createDto: CreateDto,
-    parentId: string,
-    getRecordById = true,
-  ): Promise<Dto | string> => {
+  create = (createDto: CreateDto, path: string, getRecordById = true): Promise<Dto | string> => {
     return new Promise<Dto | string>((resolve, reject) => {
       this.axios
-        .post(`${this.baseUrl}/${parentId}/${this.childUrl}`, createDto, {
+        .post(`${this.baseUrl}/${path}`, createDto, {
           headers: {
             Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
@@ -78,18 +68,19 @@ export class ConnectorChield<
    * Record updating.
    * @param {PrimaryKey} id record primary id
    * @param {UpdateDto} updateDto record update DTO
+   * @param {string} path path e.g. feature/1/feature-process/
    * @param {boolean} getRecordById optional flag, if true getRecordById will be called after create (default true).
    * @returns {Promise<Dto | void>} Promise with DTO or nothing if getRecordById===false
    */
   update = (
     id: PrimaryKey,
     updateDto: UpdateDto,
-    parentId: string,
+    path: string,
     getRecordById = true,
   ): Promise<Dto | void> => {
     return new Promise<Dto | void>((resolve, reject) => {
       this.axios
-        .put(`${this.baseUrl}/${parentId}/${this.childUrl}/${id}`, updateDto, {
+        .put(`${this.baseUrl}/${path}/${id}`, updateDto, {
           headers: {
             Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
@@ -127,11 +118,12 @@ export class ConnectorChield<
   /**
    * Record deletion.
    * @param {string} id record id
+   * @param {string} path path e.g. feature/1/feature-process/
    */
-  delete = (id: PrimaryKey, parentId: string): Promise<void> => {
+  delete = (id: PrimaryKey, path: string): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       this.axios
-        .delete(`${this.baseUrl}/${parentId}/${this.childUrl}/${id}`, {
+        .delete(`${this.baseUrl}/${path}/${id}`, {
           headers: {
             Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
@@ -147,11 +139,12 @@ export class ConnectorChield<
   /**
    * Get record by id.
    * @param {string} id record id
+   * @param {string} path path e.g. feature/1/feature-process/
    */
-  getRecordById = (id: PrimaryKey, parentId: string): Promise<Dto> => {
+  getRecordById = (id: PrimaryKey, path: string): Promise<Dto> => {
     return new Promise<Dto>((resolve, reject) => {
       this.axios
-        .get(`${this.baseUrl}/${parentId}/${this.childUrl}/${id}`, {
+        .get(`${this.baseUrl}/${path}/${id}`, {
           headers: {
             Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
@@ -171,11 +164,12 @@ export class ConnectorChield<
   /**
    * Get all records by parent ID.
    * @param {string} id record id
+   * @param {string} path path e.g. feature/1/feature-process/
    */
-  getAll = (parentId: string): Promise<Dto[]> => {
+  getAll = (path: string): Promise<Dto[]> => {
     return new Promise<Dto[]>((resolve, reject) => {
       this.axios
-        .get(`${this.baseUrl}/${parentId}/${this.childUrl}`, {
+        .get(`${this.baseUrl}/${path}`, {
           headers: {
             Accept: "application/json;charset=utf-8",
             "Content-Type": "application/json;charset=utf-8",
