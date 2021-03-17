@@ -1,9 +1,9 @@
 {
   "name": "jfront-core-redux-saga-query-search",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@jfront/core-redux-saga": "^0.2.2",
+    "@jfront/core-redux-saga": "^0.3.0",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },

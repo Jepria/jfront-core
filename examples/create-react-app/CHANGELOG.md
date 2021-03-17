@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0](https://github.com/Jepria/jfront-core/compare/jfront-core-cra@0.0.6...jfront-core-cra@0.1.0) (2021-03-17)
+
+
+### Features
+
+* add ChildFeatureApi.ts ([d9a1ba4](https://github.com/Jepria/jfront-core/commit/d9a1ba48ec20294e4c54f5b33d2dda26061ecc82))
+* support for multilevel nesting ([e16a37f](https://github.com/Jepria/jfront-core/commit/e16a37f50190c670fb4a3f4032fd213cf77369fa))
+
+
+
+
+
 ## [0.0.6](https://github.com/Jepria/jfront-core/compare/jfront-core-cra@0.0.5...jfront-core-cra@0.0.6) (2021-02-03)
 
 **Note:** Version bump only for package jfront-core-cra
