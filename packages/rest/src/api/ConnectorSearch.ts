@@ -1,5 +1,5 @@
 import { ConnectorBase } from "./ConnectorBase";
-import { SearchRequest } from "./types";
+import { ResultSet, SearchRequest } from "./types";
 import { buildError, handleAxiosError } from "./Errors";
 import { AxiosResponse, AxiosError } from "axios";
 
@@ -27,7 +27,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
           },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.status === 201) {
+          if (response?.status === 201) {
             const location: string = response.headers["location"];
             resolve(location.split("/").pop() as string);
           } else {
@@ -39,13 +39,39 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
   };
 
   /**
-   * Search request.
+   * Search values by query
+   * @param {string} query search query string e.g. "field1=text1&field2=text2"
+   * @param {string} cacheControl Cache-control header value
+   */
+  search = (query: string, cacheControl = "no-cache"): Promise<ResultSet<Dto>> => {
+    return new Promise<ResultSet<Dto>>((resolve, reject) => {
+      this.axios
+        .get(this.baseUrl + `/search?${query}`, {
+          headers: {
+            Accept: "application/json;charset=utf-8",
+            "Content-Type": "application/json;charset=utf-8",
+            "Cache-Control": cacheControl,
+          },
+        })
+        .then((response: AxiosResponse<any>) => {
+          if (response?.status === 200) {
+            resolve(response.data);
+          } else {
+            reject(buildError(response));
+          }
+        })
+        .catch((error: AxiosError) => reject(handleAxiosError(error)));
+    });
+  };
+
+  /**
+   * Get resultset by searchId.
    * @param {string} searchId search template id
    * @param {number} pageSize page size
    * @param {number} page page number
    * @param {string} cacheControl Cache-control header value
    */
-  search = (
+  getResultSet = (
     searchId: string,
     pageSize: number,
     page: number,
@@ -61,9 +87,9 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
           },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.status === 200) {
+          if (response?.status === 200) {
             resolve(response.data);
-          } else if (response.status === 204) {
+          } else if (response?.status === 204) {
             resolve([]);
           } else {
             reject(buildError(response));
@@ -89,7 +115,7 @@ export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
           },
         })
         .then((response: AxiosResponse<any>) => {
-          if (response.status === 200) {
+          if (response?.status === 200) {
             resolve(response.data);
           } else {
             reject(buildError(response));

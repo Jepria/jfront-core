@@ -31,16 +31,12 @@ export interface ServerError {
   errorMessage?: string;
 }
 
-export type NetworkError = BadRequest |
-  NotFound |
-  AuthorizationFailed |
-  AccessDenied |
-  ServerError;
+export type NetworkError = BadRequest | NotFound | AuthorizationFailed | AccessDenied | ServerError;
 
 export type ConstraintViolation = {
   propertyPath: string;
   violationDescription: string;
-}
+};
 export interface SearchRequest<Template> {
   template: Template;
   listSortConfiguration?: Array<ColumnSortConfiguration>;
@@ -54,4 +50,9 @@ export interface ColumnSortConfiguration {
 export type Option<Value> = {
   name: string;
   value: Value;
-}
+};
+
+export type ResultSet<Entity> = {
+  resultsetSize: number;
+  data: Entity[];
+};

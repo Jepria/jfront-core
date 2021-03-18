@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-rest@0.1.4...@jfront/core-rest@0.2.0) (2021-03-17)
+
+
+### Bug Fixes
+
+* prevent errors if response is undefined ([6adca12](https://github.com/Jepria/jfront-core/commit/6adca1272d333f52c51d402df5404c1b79010640))
+
+
+### Code Refactoring
+
+* dependencies updated ([2911f41](https://github.com/Jepria/jfront-core/commit/2911f419f59a32c538d8fdfce4788aaf90f5b676))
+
+
+### Features
+
+* add ChildFeatureApi.ts ([d9a1ba4](https://github.com/Jepria/jfront-core/commit/d9a1ba48ec20294e4c54f5b33d2dda26061ecc82))
+* search with query string and http get method ([4286229](https://github.com/Jepria/jfront-core/commit/4286229a56a4313fbe9ed55f886f03f09924a0d2))
+* support for multilevel nesting ([e16a37f](https://github.com/Jepria/jfront-core/commit/e16a37f50190c670fb4a3f4032fd213cf77369fa))
+
+
+### BREAKING CHANGES
+
+* react 17.0.1
+
+
+
+
+
 ## [0.1.4](https://github.com/Jepria/jfront-core/compare/@jfront/core-rest@0.1.3...@jfront/core-rest@0.1.4) (2021-02-03)
 
 **Note:** Version bump only for package @jfront/core-rest

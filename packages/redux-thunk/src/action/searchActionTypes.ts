@@ -13,8 +13,9 @@ export interface PostSearchRequestSuccessAction<V> {
   searchId: string;
 }
 
-export interface SearchAction {
-  searchId: string;
+export interface SearchAction<V> {
+  searchId?: string;
+  searchTemplate?: SearchRequest<V>;
   pageSize: number;
   pageNumber: number;
 }

@@ -9,6 +9,7 @@ import {
 import { ConnectorSearch } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
 import {
+  GetResultSetAction,
   PostSearchAction,
   PostSearchRequestAction,
   PostSearchRequestSuccessAction,
@@ -61,10 +62,20 @@ export const createSearchSlice = <
         state.searchRequest = action.payload.searchTemplate;
         state.searchId = action.payload.searchId;
       },
-      search(state: S, action: PayloadAction<SearchAction<Entity>>) {
+      getResultSet(state: S, action: PayloadAction<GetResultSetAction<Entity>>) {
         state.isLoading = true;
         state.pageNumber = action.payload.pageNumber;
         state.pageSize = action.payload.pageSize;
+        state.records = [];
+      },
+      search(state: S, action: PayloadAction<SearchAction<SearchTemplate, Entity>>) {
+        state.isLoading = true;
+        if (action.payload.searchTemplate != null) {
+          state.searchRequest = action.payload.searchTemplate;
+        }
+        state.pageNumber = action.payload.pageNumber;
+        state.pageSize = action.payload.pageSize;
+        state.records = [];
       },
       searchSuccess(state: S, action: PayloadAction<SearchSuccessAction<Entity>>) {
         state.isLoading = false;
@@ -114,10 +125,38 @@ export const createSearchSlice = <
       }
     }
 
-    function* search(action: PayloadAction<SearchAction<Entity>>) {
+    function* search(action: PayloadAction<SearchAction<SearchTemplate, Entity>>) {
+      try {
+        const query = new URLSearchParams({
+          ...action.payload.searchTemplate.template,
+          page: String(action.payload.pageNumber),
+          pageSize: String(action.payload.pageSize),
+        });
+        action.payload.searchTemplate.listSortConfiguration?.forEach((sortConfig) =>
+          query.append("sort", `${sortConfig.columnName},${sortConfig.sortOrder}`),
+        );
+        const result = yield call(api.search, query.toString());
+        yield put(
+          actions.searchSuccess({ records: result.data, resultSetSize: result.resultsetSize }),
+        );
+        if (action.payload.onSuccess) {
+          yield call(action.payload.onSuccess, {
+            records: result.data,
+            resultSetSize: result.resultsetSize,
+          });
+        }
+      } catch (error) {
+        yield put(actions.failure({ error }));
+        if (action.payload.onFailure) {
+          yield call(action.payload.onFailure, error);
+        }
+      }
+    }
+
+    function* getResultSet(action: PayloadAction<GetResultSetAction<Entity>>) {
       try {
         const records = yield call(
-          api.search,
+          api.getResultSet,
           action.payload.searchId,
           action.payload.pageSize,
           action.payload.pageNumber,
@@ -144,7 +183,7 @@ export const createSearchSlice = <
         },
       });
       yield put(
-        actions.search({
+        actions.getResultSet({
           searchId: payload.searchId,
           pageSize: action.payload.pageSize,
           page: action.payload.pageNumber,
@@ -158,6 +197,7 @@ export const createSearchSlice = <
       yield all([
         yield takeEvery(actions.setSearchTemplate.type, setSearchTemplate),
         yield takeLatest(actions.postSearchRequest.type, postSearchRequest),
+        yield takeLatest(actions.getResultSet.type, getResultSet),
         yield takeLatest(actions.search.type, search),
         yield takeLatest(actions.postSearch.type, postSearch),
       ]);

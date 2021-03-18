@@ -30,7 +30,7 @@ export class ConnectorCrud<
           },
         })
         .then((response) => {
-          if (response.status === 201) {
+          if (response?.status === 201) {
             const location: string = response.headers["location"];
             if (getRecordById) {
               this.axios
@@ -41,7 +41,7 @@ export class ConnectorCrud<
                   },
                 })
                 .then((response) => {
-                  if (response.status === 200) {
+                  if (response?.status === 200) {
                     resolve(response.data);
                   } else {
                     reject(buildError(response));
@@ -76,7 +76,7 @@ export class ConnectorCrud<
           },
         })
         .then((response) => {
-          if (response.status === 200) {
+          if (response?.status === 200) {
             if (getRecordById) {
               this.axios
                 .get(this.baseUrl + `/${id}`, {
@@ -86,7 +86,7 @@ export class ConnectorCrud<
                   },
                 })
                 .then((response) => {
-                  if (response.status === 200) {
+                  if (response?.status === 200) {
                     resolve(response.data);
                   } else {
                     reject(buildError(response));
@@ -118,7 +118,7 @@ export class ConnectorCrud<
           },
         })
         .then((response) => {
-          response.status === 200 ? resolve() : reject(buildError(response));
+          response?.status === 200 ? resolve() : reject(buildError(response));
         })
         .catch((error) => reject(handleAxiosError(error)));
     });
@@ -138,7 +138,7 @@ export class ConnectorCrud<
           },
         })
         .then((response) => {
-          if (response.status === 200) {
+          if (response?.status === 200) {
             resolve(response.data);
           } else {
             reject(buildError(response));

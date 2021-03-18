@@ -16,8 +16,16 @@ export interface PostSearchRequestSuccessAction<V> {
   searchId: string;
 }
 
-export interface SearchAction<T> {
+export interface GetResultSetAction<T> {
   searchId: string;
+  pageSize: number;
+  pageNumber: number;
+  onSuccess?: (payload: SearchSuccessAction<T>) => void;
+  onFailure?: (error: any) => void;
+}
+
+export interface SearchAction<V, T> {
+  searchTemplate: SearchRequest<V>;
   pageSize: number;
   pageNumber: number;
   onSuccess?: (payload: SearchSuccessAction<T>) => void;

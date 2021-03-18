@@ -1,0 +1,56 @@
+{
+  "name": "jfront-core-redux-thunk-query-search",
+  "version": "0.2.0",
+  "private": true,
+  "dependencies": {
+    "@jfront/core-redux-thunk": "^0.2.0",
+    "@jfront/core-rest": "^0.2.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
+  },
+  "devDependencies": {
+    "@jfront/ui-combobox": "0.4.3",
+    "@reduxjs/toolkit": "1.5.0",
+    "@testing-library/jest-dom": "^5.7.0",
+    "@testing-library/react": "^10.4.7",
+    "@types/jest": "^26.0.0",
+    "@types/react": "^17.0.1",
+    "@types/react-dom": "^17.0.1",
+    "@types/react-redux": "^7.1.7",
+    "@types/redux-logger": "3.0.7",
+    "core-js": "^3.6.4",
+    "eslint-config-react-app": "^5.2.1",
+    "formik": "2.2.5",
+    "namor": "2.0.2",
+    "react-app-polyfill": "^1.0.6",
+    "react-id-generator": "3.0.1",
+    "react-redux": "7.2.1",
+    "react-scripts": "^3.4.1",
+    "redux": "4.0.5",
+    "redux-logger": "3.0.6",
+    "typescript": "^3.9.6"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      "IE >= 10"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+      "IE 11"
+    ]
+  }
+}

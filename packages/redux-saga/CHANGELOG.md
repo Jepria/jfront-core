@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.2.2...@jfront/core-redux-saga@0.3.0) (2021-03-17)
+
+
+### Code Refactoring
+
+* dependencies updated ([2911f41](https://github.com/Jepria/jfront-core/commit/2911f419f59a32c538d8fdfce4788aaf90f5b676))
+
+
+### Features
+
+* search with query string and http get method ([4286229](https://github.com/Jepria/jfront-core/commit/4286229a56a4313fbe9ed55f886f03f09924a0d2))
+
+
+### BREAKING CHANGES
+
+* react 17.0.1
+
+
+
+
+
 ## [0.2.2](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.2.1...@jfront/core-redux-saga@0.2.2) (2021-02-03)
 
 
