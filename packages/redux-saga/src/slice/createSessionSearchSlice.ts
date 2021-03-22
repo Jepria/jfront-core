@@ -125,34 +125,6 @@ export const createSessionSearchSlice = <
       }
     }
 
-    function* search(action: PayloadAction<SearchAction<SearchTemplate, Entity>>) {
-      try {
-        const query = new URLSearchParams({
-          ...action.payload.searchTemplate.template,
-          page: String(action.payload.pageNumber),
-          pageSize: String(action.payload.pageSize),
-        });
-        action.payload.searchTemplate.listSortConfiguration?.forEach((sortConfig) =>
-          query.append("sort", `${sortConfig.columnName},${sortConfig.sortOrder}`),
-        );
-        const result = yield call(api.search, query.toString());
-        yield put(
-          actions.searchSuccess({ records: result.data, resultSetSize: result.resultsetSize }),
-        );
-        if (action.payload.onSuccess) {
-          yield call(action.payload.onSuccess, {
-            records: result.data,
-            resultSetSize: result.resultsetSize,
-          });
-        }
-      } catch (error) {
-        yield put(actions.failure({ error }));
-        if (action.payload.onFailure) {
-          yield call(action.payload.onFailure, error);
-        }
-      }
-    }
-
     function* getResultSet(action: PayloadAction<GetResultSetAction<Entity>>) {
       try {
         const records = yield call(

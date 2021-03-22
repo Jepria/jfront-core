@@ -119,44 +119,6 @@ export const createSessionSearchSlice = <
     };
   };
 
-  const searchThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
-    return function (
-      searchRequest: SearchRequest<SearchTemplate>,
-      pageSize: number,
-      pageNumber: number,
-    ): ThunkAction<Promise<SearchSuccessAction<Entity>>, S, unknown, Action<string>> {
-      return async (dispatch) => {
-        try {
-          dispatch(
-            actions.search({
-              searchRequest,
-              pageSize,
-              pageNumber,
-            }),
-          );
-          const query = new URLSearchParams({
-            ...searchRequest.template,
-            page: String(pageNumber),
-            pageSize: String(pageSize),
-          });
-          searchRequest.listSortConfiguration?.forEach((sortConfig) =>
-            query.append("sort", `${sortConfig.columnName},${sortConfig.sortOrder}`),
-          );
-          const response = await api.search(query.toString());
-          const result = {
-            records: response.data,
-            resultSetSize: response.resultsetSize,
-          };
-          dispatch(actions.searchSuccess(result));
-          return result;
-        } catch (error) {
-          dispatch(actions.failure({ error }));
-          return Promise.reject(error);
-        }
-      };
-    };
-  };
-
   const getResultSetThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
     return function (
       searchId: string,
