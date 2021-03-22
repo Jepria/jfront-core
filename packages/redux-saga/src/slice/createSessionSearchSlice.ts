@@ -22,7 +22,7 @@ import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
-export const createSearchSlice = <
+export const createSessionSearchSlice = <
   SearchTemplate = any,
   Entity = any,
   S extends SearchState<SearchTemplate, Entity> = SearchState<SearchTemplate, Entity>,
