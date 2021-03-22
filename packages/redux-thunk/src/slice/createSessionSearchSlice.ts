@@ -175,7 +175,6 @@ export const createSessionSearchSlice = <
       postSearchRequestThunk,
       getResultSetThunk,
       postSearchThunk,
-      searchThunk,
     },
   };
 };

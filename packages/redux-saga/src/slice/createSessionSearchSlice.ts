@@ -68,15 +68,6 @@ export const createSessionSearchSlice = <
         state.pageSize = action.payload.pageSize;
         state.records = [];
       },
-      search(state: S, action: PayloadAction<SearchAction<SearchTemplate, Entity>>) {
-        state.isLoading = true;
-        if (action.payload.searchTemplate != null) {
-          state.searchRequest = action.payload.searchTemplate;
-        }
-        state.pageNumber = action.payload.pageNumber;
-        state.pageSize = action.payload.pageSize;
-        state.records = [];
-      },
       searchSuccess(state: S, action: PayloadAction<SearchSuccessAction<Entity>>) {
         state.isLoading = false;
         state.records = action.payload.records;
@@ -170,7 +161,6 @@ export const createSessionSearchSlice = <
         yield takeEvery(actions.setSearchTemplate.type, setSearchTemplate),
         yield takeLatest(actions.postSearchRequest.type, postSearchRequest),
         yield takeLatest(actions.getResultSet.type, getResultSet),
-        yield takeLatest(actions.search.type, search),
         yield takeLatest(actions.postSearch.type, postSearch),
       ]);
     };
