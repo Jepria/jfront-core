@@ -1,4 +1,4 @@
-import { EntityState, OptionState, SearchState } from "@jfront/core-redux-saga";
+import { EntityState, OptionState, SessionSearchState } from "@jfront/core-redux-saga";
 import { combineReducers, Reducer } from "@reduxjs/toolkit";
 import { initialEntityState, reducer as crudReducer } from "../../list/state/listCrudSlice";
 import { initialOptionsState, reducer as optionsReducer } from "../../list/state/listOptionsSlice";
@@ -12,7 +12,7 @@ import { SearchTemplate } from "../../list/api/ListTypes";
 
 export interface AppState {
   list: {
-    listSearchSlice: SearchState<SearchTemplate, Item>;
+    listSearchSlice: SessionSearchState<SearchTemplate, Item>;
     listCrudSlice: EntityState<Item>;
     listOptionsSlice: OptionState<string>;
     listFilterOptionsSlice: OptionState<string>;

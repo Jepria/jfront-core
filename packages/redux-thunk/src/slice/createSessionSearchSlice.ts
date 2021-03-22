@@ -17,14 +17,14 @@ import {
   SearchSuccessAction,
   SetSearchTemplateAction,
 } from "../action/searchActionTypes";
-import { SearchState } from "../types";
+import { SessionSearchState } from "../types";
 
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
-export const createSearchSlice = <
+export const createSessionSearchSlice = <
   SearchTemplate = any,
   Entity = any,
-  S extends SearchState<SearchTemplate, Entity> = SearchState<SearchTemplate, Entity>,
+  S extends SessionSearchState<SearchTemplate, Entity> = SessionSearchState<SearchTemplate, Entity>,
   Reducers extends SliceCaseReducers<S> = SliceCaseReducers<S>
 >({
   name = "",
