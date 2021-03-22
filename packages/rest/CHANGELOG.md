@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-rest@0.2.0...@jfront/core-rest@0.3.0) (2021-03-22)
+
+
+### Bug Fixes
+
+* remove unused functions ([166de4d](https://github.com/Jepria/jfront-core/commit/166de4d85ae354313e8669ec9eac39f8280ece41))
+
+
+### Features
+
+* add SearchSlice ([f14e8c2](https://github.com/Jepria/jfront-core/commit/f14e8c2134ace07c02b33d6a96d1d936b65f3b36))
+
+
+
+
+
 # [0.2.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-rest@0.1.4...@jfront/core-rest@0.2.0) (2021-03-17)
 
 

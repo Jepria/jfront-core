@@ -6,7 +6,7 @@ import { AppState } from "../../app/store/reducer";
 import { actions as crudActions } from "../state/listCrudSlice";
 import { getListOptions } from "../state/listOptionsSlice";
 import { getListFilterOptions } from "../state/listFilterOptionsSlice";
-import { search, postSearch } from "../state/listSearchSlice";
+import { search } from "../state/listSearchSlice";
 import { ComboBox, ComboBoxItem } from "@jfront/ui-combobox";
 
 export const ListPage = () => {

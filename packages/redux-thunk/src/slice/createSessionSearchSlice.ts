@@ -8,21 +8,23 @@ import {
   ThunkAction,
   ValidateSliceCaseReducers,
 } from "@reduxjs/toolkit";
-import { ConnectorSearch, SearchRequest } from "@jfront/core-rest";
+import { ConnectorSessionSearch, SearchRequest } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
 import {
+  PostSearchRequestAction,
+  PostSearchRequestSuccessAction,
   SearchAction,
   SearchSuccessAction,
   SetSearchTemplateAction,
 } from "../action/searchActionTypes";
-import { SearchState } from "../types";
+import { SessionSearchState } from "../types";
 
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
-export const createSearchSlice = <
+export const createSessionSearchSlice = <
   SearchTemplate = any,
   Entity = any,
-  S extends SearchState<SearchTemplate, Entity> = SearchState<SearchTemplate, Entity>,
+  S extends SessionSearchState<SearchTemplate, Entity> = SessionSearchState<SearchTemplate, Entity>,
   Reducers extends SliceCaseReducers<S> = SliceCaseReducers<S>
 >({
   name = "",
@@ -45,6 +47,19 @@ export const createSearchSlice = <
     reducers: {
       setSearchTemplate(state: S, action: PayloadAction<SetSearchTemplateAction<SearchTemplate>>) {
         state.searchRequest = action.payload.searchTemplate;
+        state.searchId = undefined;
+      },
+      postSearchRequest(state: S, action: PayloadAction<PostSearchRequestAction<SearchTemplate>>) {
+        state.isLoading = true;
+        state.searchId = undefined;
+      },
+      postSearchRequestSuccess(
+        state: S,
+        action: PayloadAction<PostSearchRequestSuccessAction<SearchTemplate>>,
+      ) {
+        state.isLoading = false;
+        state.searchRequest = action.payload.searchTemplate;
+        state.searchId = action.payload.searchId;
       },
       search(state: S, action: PayloadAction<SearchAction<SearchTemplate>>) {
         state.isLoading = true;
@@ -73,9 +88,40 @@ export const createSearchSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const searchThunk = (api: ConnectorSearch<Entity>) => {
+  const postSearchRequestThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
     return function (
-      searchRequest: SearchRequest<SearchTemplate>,
+      searchTemplate: SearchRequest<SearchTemplate>,
+    ): ThunkAction<
+      Promise<PostSearchRequestSuccessAction<SearchTemplate>>,
+      S,
+      unknown,
+      Action<string>
+    > {
+      return async (dispatch) => {
+        try {
+          dispatch(
+            actions.postSearchRequest({
+              searchTemplate,
+            }),
+          );
+          const searchId = await api.postSearchRequest(searchTemplate);
+          const result = {
+            searchTemplate: searchTemplate,
+            searchId,
+          };
+          dispatch(actions.postSearchRequestSuccess(result));
+          return result;
+        } catch (error) {
+          dispatch(actions.failure({ error }));
+          return Promise.reject(error);
+        }
+      };
+    };
+  };
+
+  const getResultSetThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
+    return function (
+      searchId: string,
       pageSize: number,
       pageNumber: number,
     ): ThunkAction<Promise<SearchSuccessAction<Entity>>, S, unknown, Action<string>> {
@@ -83,23 +129,17 @@ export const createSearchSlice = <
         try {
           dispatch(
             actions.search({
-              searchRequest,
+              searchId,
+              searchTemplate: null,
               pageSize,
               pageNumber,
             }),
           );
-          const query = new URLSearchParams({
-            ...searchRequest.template,
-            page: String(pageNumber),
-            pageSize: String(pageSize),
-          });
-          searchRequest.listSortConfiguration?.forEach((sortConfig) =>
-            query.append("sort", `${sortConfig.columnName},${sortConfig.sortOrder}`),
-          );
-          const response = await api.search(query.toString());
+          const response = await api.getResultSet(String(searchId), pageSize, pageNumber);
+          const resultSetSize = await api.getResultSetSize(String(searchId));
           const result = {
-            records: response.data,
-            resultSetSize: response.resultsetSize,
+            records: response,
+            resultSetSize,
           };
           dispatch(actions.searchSuccess(result));
           return result;
@@ -111,12 +151,30 @@ export const createSearchSlice = <
     };
   };
 
+  const postSearchThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
+    return function (
+      searchTemplate: SearchRequest<SearchTemplate>,
+      pageSize: number,
+      pageNumber: number,
+    ): ThunkAction<Promise<SearchSuccessAction<Entity>>, S, unknown, Action<string>> {
+      const postSearchRequest = postSearchRequestThunk(api);
+      const search = getResultSetThunk(api);
+      return async (dispatch) => {
+        return dispatch(postSearchRequest(searchTemplate)).then((action) => {
+          return dispatch(search(action.searchId, pageSize, pageNumber));
+        });
+      };
+    };
+  };
+
   return {
     name: slice.name,
     actions: slice.actions,
     reducer: slice.reducer,
     thunk: {
-      searchThunk,
+      postSearchRequestThunk,
+      getResultSetThunk,
+      postSearchThunk,
     },
   };
 };

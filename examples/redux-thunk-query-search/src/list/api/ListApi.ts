@@ -36,7 +36,7 @@ const addItem = (value: Item) => {
   items.push(value);
 };
 
-export class ListSearchApi extends ConnectorSearch<Item, SearchTemplate> {
+export class ListSearchApi extends ConnectorSearch<Item> {
   /**
    * Search request.
    * @param {string} query query string

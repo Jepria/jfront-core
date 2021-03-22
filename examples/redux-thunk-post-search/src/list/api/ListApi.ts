@@ -1,7 +1,7 @@
 import { ConnectorCrud } from "@jfront/core-rest";
 import { Item } from "../types";
 import namor from "namor";
-import { ConnectorSearch, SearchRequest } from "@jfront/core-rest";
+import { ConnectorSessionSearch, SearchRequest } from "@jfront/core-rest";
 import { SearchTemplate } from "./ListTypes";
 
 const makeData = (length: number) => {
@@ -36,7 +36,7 @@ const addItem = (value: Item) => {
   items.push(value);
 };
 
-export class ListSearchApi extends ConnectorSearch<Item, SearchTemplate> {
+export class ListSearchApi extends ConnectorSessionSearch<Item, SearchTemplate> {
   private searchMap = new Map<string, string>();
 
   /**
