@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../app/store/reducer";
 import { ListPage } from "./page/ListPage";
-import { search, postSearch } from "./state/listSearchSlice";
+import { search } from "./state/listSearchSlice";
 import { useFormik } from "formik";
 import namor from "namor";
 import { createRecord, deleteRecord } from "./state/listCrudSlice";

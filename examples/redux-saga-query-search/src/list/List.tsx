@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import namor from "namor";
 
 export const List = () => {
-  const { searchRequest, searchId } = useSelector((state: AppState) => state.list.listSearchSlice);
+  const { searchRequest } = useSelector((state: AppState) => state.list.listSearchSlice);
   const { selectedRecords, currentRecord } = useSelector(
     (state: AppState) => state.list.listCrudSlice,
   );

@@ -20,6 +20,5 @@ const slice = createSearchSlice<SearchTemplate, Item>({
 const thunkCreators = slice.thunk;
 
 export const search = thunkCreators.searchThunk(api);
-export const postSearch = thunkCreators.postSearchThunk(api);
 
 export const { name, actions, reducer } = slice;

@@ -1,4 +1,5 @@
 export * from "./slice/createCrudSlice";
+export * from "./slice/createSessionSearchSlice";
 export * from "./slice/createSearchSlice";
 export * from "./types";
 export * from "./action/actionTypes";

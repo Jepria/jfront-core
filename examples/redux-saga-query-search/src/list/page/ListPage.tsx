@@ -9,7 +9,7 @@ import { actions as filterOptionActions } from "../state/listFilterOptionsSlice"
 import { ComboBox, ComboBoxItem } from "@jfront/ui-combobox";
 
 export const ListPage = () => {
-  const { records, isLoading, searchId, searchRequest } = useSelector(
+  const { records, isLoading, searchRequest } = useSelector(
     (state: AppState) => state.list.listSearchSlice,
   );
   const { selectedRecords, currentRecord } = useSelector(
