@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-common@0.1.0...@jfront/core-common@0.2.0) (2021-03-17)
+
+
+### Code Refactoring
+
+* dependencies updated ([2911f41](https://github.com/Jepria/jfront-core/commit/2911f419f59a32c538d8fdfce4788aaf90f5b676))
+
+
+### BREAKING CHANGES
+
+* react 17.0.1
+
+
+
+
+
 # 0.1.0 (2021-02-03)
 
 

@@ -1,5 +1,21 @@
 # Change Log
 
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 0.2.0 (2021-03-17)
+
+
+### Features
+
+* search with query string and http get method ([4286229](https://github.com/Jepria/jfront-core/commit/4286229a56a4313fbe9ed55f886f03f09924a0d2))
+
+
+
+
+
+# Change Log
+
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
