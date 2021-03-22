@@ -6,7 +6,7 @@ import {
   SliceCaseReducers,
   ValidateSliceCaseReducers,
 } from "@reduxjs/toolkit";
-import { ConnectorSearch } from "@jfront/core-rest";
+import { ConnectorSessionSearch } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
 import {
   GetResultSetAction,
@@ -98,7 +98,7 @@ export const createSearchSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const createSagaMiddleware = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+  const createSagaMiddleware = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
     function* setSearchTemplate(action: PayloadAction<SetSearchTemplateAction<SearchTemplate>>) {
       if (action.payload.callback) {
         yield call(action.payload.callback, action.payload.searchTemplate);

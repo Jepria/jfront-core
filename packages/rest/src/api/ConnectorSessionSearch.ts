@@ -6,9 +6,9 @@ import { AxiosResponse, AxiosError } from "axios";
 /**
  * Standard jepria-rest Search RESTful API connector.
  * @example
- * let connector: ConnectorSearch<Dto, SearchTemplate> = new ConnectorSearch("http://localhost:8080/feature/api/feature");
+ * let connector: ConnectorSessionSearch<Dto, SearchTemplate> = new ConnectorSessionSearch("http://localhost:8080/feature/api/feature");
  */
-export class ConnectorSearch<Dto, SearchTemplate> extends ConnectorBase {
+export class ConnectorSessionSearch<Dto, SearchTemplate> extends ConnectorBase {
   private axios = this.getAxios();
 
   /**

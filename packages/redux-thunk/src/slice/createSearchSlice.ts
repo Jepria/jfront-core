@@ -8,7 +8,7 @@ import {
   ThunkAction,
   ValidateSliceCaseReducers,
 } from "@reduxjs/toolkit";
-import { ConnectorSearch, SearchRequest } from "@jfront/core-rest";
+import { ConnectorSessionSearch, SearchRequest } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
 import {
   PostSearchRequestAction,
@@ -88,7 +88,7 @@ export const createSearchSlice = <
 
   const actions = slice.actions as any; //cast to any, unknown TS issue
 
-  const postSearchRequestThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+  const postSearchRequestThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
     return function (
       searchTemplate: SearchRequest<SearchTemplate>,
     ): ThunkAction<
@@ -119,7 +119,7 @@ export const createSearchSlice = <
     };
   };
 
-  const searchThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+  const searchThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
     return function (
       searchRequest: SearchRequest<SearchTemplate>,
       pageSize: number,
@@ -157,7 +157,7 @@ export const createSearchSlice = <
     };
   };
 
-  const getResultSetThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+  const getResultSetThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
     return function (
       searchId: string,
       pageSize: number,
@@ -189,7 +189,7 @@ export const createSearchSlice = <
     };
   };
 
-  const postSearchThunk = (api: ConnectorSearch<Entity, SearchTemplate>) => {
+  const postSearchThunk = (api: ConnectorSessionSearch<Entity, SearchTemplate>) => {
     return function (
       searchTemplate: SearchRequest<SearchTemplate>,
       pageSize: number,
