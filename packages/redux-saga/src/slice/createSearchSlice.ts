@@ -81,8 +81,14 @@ export const createSearchSlice = <
 
     function* search(action: PayloadAction<SearchAction<SearchTemplate, Entity>>) {
       try {
+        const template = { ...action.payload.searchTemplate.template };
+        for (const param in template) {
+          if (template[param] === undefined || template[param] === null) {
+            delete template[param];
+          }
+        }
         const query = new URLSearchParams({
-          ...action.payload.searchTemplate.template,
+          ...template,
           page: String(action.payload.pageNumber),
           pageSize: String(action.payload.pageSize),
         });
@@ -91,7 +97,10 @@ export const createSearchSlice = <
         );
         const result = yield call(api.search, query.toString());
         yield put(
-          actions.searchSuccess({ records: result.data, resultSetSize: result.resultsetSize }),
+          actions.searchSuccess({
+            records: result.resultSetSize > 0 ? result.data : [],
+            resultSetSize: result.resultsetSize,
+          }),
         );
         if (action.payload.onSuccess) {
           yield call(action.payload.onSuccess, {

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.3.0...@jfront/core-redux-thunk@0.3.1) (2021-04-01)
+
+
+### Bug Fixes
+
+* null and undefined query params were added to query string ([6cbc5f4](https://github.com/Jepria/jfront-core/commit/6cbc5f454b8cf08ef16be2d925572509d9ab2c15))
+
+
+
+
+
 # [0.3.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.2.0...@jfront/core-redux-thunk@0.3.0) (2021-03-22)
 
 
