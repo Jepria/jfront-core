@@ -98,7 +98,7 @@ export const createSearchSlice = <
         const result = yield call(api.search, query.toString());
         yield put(
           actions.searchSuccess({
-            records: result.resultSetSize > 0 ? result.data : [],
+            records: result.resultsetSize > 0 ? result.data : [],
             resultSetSize: result.resultsetSize,
           }),
         );

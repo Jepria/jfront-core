@@ -31,11 +31,9 @@ export const createOptionsSlice = <
     reducers: {
       getOptionsStart(state, action: PayloadAction<GetOptionsAction>) {
         state.isLoading = true;
-        state.error = "";
       },
       getOptionsSuccess(state: OptionState<T>, action: PayloadAction<GetOptionsActionSuccess<T>>) {
         state.options = action.payload.options;
-        state.error = "";
         state.isLoading = false;
       },
       getOptionsFailure(state: OptionState<T>, action: PayloadAction<FailureAction<any>>) {
