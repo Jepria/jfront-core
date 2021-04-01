@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.4.1...@jfront/core-redux-saga@0.4.2) (2021-04-01)
+
+
+### Bug Fixes
+
+* search type ([b6be2c7](https://github.com/Jepria/jfront-core/commit/b6be2c7cec95feb9cf7ddd10118d62d10278702a))
+
+
+
+
+
+## [0.4.1](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.4.0...@jfront/core-redux-saga@0.4.1) (2021-04-01)
+
+
+### Bug Fixes
+
+* null and undefined query params were added to query string ([6cbc5f4](https://github.com/Jepria/jfront-core/commit/6cbc5f454b8cf08ef16be2d925572509d9ab2c15))
+
+
+
+
+
+# [0.4.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.3.0...@jfront/core-redux-saga@0.4.0) (2021-03-22)
+
+
+### Bug Fixes
+
+* create event not working in React 17 without cancelable and bubbles properties ([4de1314](https://github.com/Jepria/jfront-core/commit/4de13140b7fe94dddb4a71f71113b0e9c03ec3b0))
+* remove unused ([67623d3](https://github.com/Jepria/jfront-core/commit/67623d324671fa8e44f36f988668768abf994f8c))
+* remove unused functions ([166de4d](https://github.com/Jepria/jfront-core/commit/166de4d85ae354313e8669ec9eac39f8280ece41))
+
+
+### Features
+
+* add SearchSlice ([f14e8c2](https://github.com/Jepria/jfront-core/commit/f14e8c2134ace07c02b33d6a96d1d936b65f3b36))
+
+
+
+
+
 # [0.3.0](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.2.2...@jfront/core-redux-saga@0.3.0) (2021-03-17)
 
 

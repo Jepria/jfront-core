@@ -88,8 +88,14 @@ export const createSearchSlice = <
               pageNumber,
             }),
           );
+          const template = { ...searchRequest.template };
+          for (const param in template) {
+            if (template[param] === undefined || template[param] === null) {
+              delete template[param];
+            }
+          }
           const query = new URLSearchParams({
-            ...searchRequest.template,
+            ...template,
             page: String(pageNumber),
             pageSize: String(pageSize),
           });
@@ -98,7 +104,7 @@ export const createSearchSlice = <
           );
           const response = await api.search(query.toString());
           const result = {
-            records: response.data,
+            records: response.resultsetSize > 0 ? response.data : [],
             resultSetSize: response.resultsetSize,
           };
           dispatch(actions.searchSuccess(result));
