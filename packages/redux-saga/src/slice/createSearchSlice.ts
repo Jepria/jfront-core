@@ -6,6 +6,7 @@ import {
   SliceCaseReducers,
   ValidateSliceCaseReducers,
 } from "@reduxjs/toolkit";
+import queryString from "query-string";
 import { ConnectorSearch } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
 import {
@@ -87,14 +88,20 @@ export const createSearchSlice = <
             delete template[param];
           }
         }
-        const query = new URLSearchParams({
+        const query = queryString.stringify({
           ...template,
           page: String(action.payload.pageNumber),
           pageSize: String(action.payload.pageSize),
         });
-        action.payload.searchTemplate.listSortConfiguration?.forEach((sortConfig) =>
-          query.append("sort", `${sortConfig.columnName},${sortConfig.sortOrder}`),
-        );
+        action.payload.searchTemplate.listSortConfiguration?.forEach((sortConfig) => {
+          if (query["sort"]) {
+            (query["sort"] as Array<string>).push(
+              `${sortConfig.columnName},${sortConfig.sortOrder}`,
+            );
+          } else {
+            query["sort"] = [`${sortConfig.columnName},${sortConfig.sortOrder}`];
+          }
+        });
         const result = yield call(api.search, query.toString());
         yield put(
           actions.searchSuccess({
