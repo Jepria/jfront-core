@@ -8,6 +8,7 @@ import {
   ThunkAction,
   ValidateSliceCaseReducers,
 } from "@reduxjs/toolkit";
+import queryString from "query-string";
 import { ConnectorSearch, SearchRequest } from "@jfront/core-rest";
 import { FailureAction } from "../action/actionTypes";
 import {
@@ -94,14 +95,20 @@ export const createSearchSlice = <
               delete template[param];
             }
           }
-          const query = new URLSearchParams({
+          const query = queryString.stringify({
             ...template,
             page: String(pageNumber),
             pageSize: String(pageSize),
           });
-          searchRequest.listSortConfiguration?.forEach((sortConfig) =>
-            query.append("sort", `${sortConfig.columnName},${sortConfig.sortOrder}`),
-          );
+          searchRequest.listSortConfiguration?.forEach((sortConfig) => {
+            if (query["sort"]) {
+              (query["sort"] as Array<string>).push(
+                `${sortConfig.columnName},${sortConfig.sortOrder}`,
+              );
+            } else {
+              query["sort"] = [`${sortConfig.columnName},${sortConfig.sortOrder}`];
+            }
+          });
           const response = await api.search(query.toString());
           const result = {
             records: response.resultsetSize > 0 ? response.data : [],
