@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.4.2...@jfront/core-redux-saga@0.4.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* search with array params ([46c069f](https://github.com/Jepria/jfront-core/commit/46c069fe755121d300d914b0cb0114441979d25e))
+
+
+
+
+
 ## [0.4.2](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-saga@0.4.1...@jfront/core-redux-saga@0.4.2) (2021-04-01)
 
 
