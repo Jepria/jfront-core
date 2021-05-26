@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.3.2...@jfront/core-redux-thunk@0.3.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* search with array params ([f2d0afa](https://github.com/Jepria/jfront-core/commit/f2d0afa9024c8aea1d22c5df8c67ed7a897f9364))
+
+
+
+
+
 ## [0.3.2](https://github.com/Jepria/jfront-core/compare/@jfront/core-redux-thunk@0.3.1...@jfront/core-redux-thunk@0.3.2) (2021-04-01)
 
 
