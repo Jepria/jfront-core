@@ -49,7 +49,7 @@ export const createSearchSlice = <
       },
       search(state: S, action: PayloadAction<SearchAction<SearchTemplate>>) {
         state.isLoading = true;
-        if (action.payload.searchRequest != null) {
+        if (action.payload.searchTemplate != null) {
           state.searchRequest = action.payload.searchTemplate;
         }
         state.pageNumber = action.payload.pageNumber;
@@ -84,7 +84,7 @@ export const createSearchSlice = <
         try {
           dispatch(
             actions.search({
-              searchRequest,
+              searchTemplate: searchRequest,
               pageSize,
               pageNumber,
             }),
