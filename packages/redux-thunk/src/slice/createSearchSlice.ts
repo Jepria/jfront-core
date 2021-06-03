@@ -49,7 +49,7 @@ export const createSearchSlice = <
       },
       search(state: S, action: PayloadAction<SearchAction<SearchTemplate>>) {
         state.isLoading = true;
-        if (action.payload.searchTemplate != null) {
+        if (action.payload.searchRequest != null) {
           state.searchRequest = action.payload.searchTemplate;
         }
         state.pageNumber = action.payload.pageNumber;
