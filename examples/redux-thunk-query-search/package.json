@@ -1,10 +1,10 @@
 {
   "name": "jfront-core-redux-thunk-query-search",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "dependencies": {
-    "@jfront/core-redux-thunk": "^0.3.3",
-    "@jfront/core-rest": "^0.3.3",
+    "@jfront/core-redux-thunk": "^0.3.4",
+    "@jfront/core-rest": "^0.3.4",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },
