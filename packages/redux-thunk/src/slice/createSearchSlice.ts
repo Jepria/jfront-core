@@ -84,7 +84,7 @@ export const createSearchSlice = <
         try {
           dispatch(
             actions.search({
-              searchRequest,
+              searchTemplate: searchRequest,
               pageSize,
               pageNumber,
             }),
