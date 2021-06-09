@@ -95,20 +95,24 @@ export const createSearchSlice = <
               delete template[param];
             }
           }
-          const query = queryString.stringify({
-            ...template,
-            page: String(pageNumber),
-            pageSize: String(pageSize),
-          });
+
+          const sort = {};
           searchRequest.listSortConfiguration?.forEach((sortConfig) => {
-            if (query["sort"]) {
-              (query["sort"] as Array<string>).push(
+            if (sort["sort"]) {
+              (sort["sort"] as Array<string>).push(
                 `${sortConfig.columnName},${sortConfig.sortOrder}`,
               );
             } else {
-              query["sort"] = [`${sortConfig.columnName},${sortConfig.sortOrder}`];
+              sort["sort"] = [`${sortConfig.columnName},${sortConfig.sortOrder}`];
             }
           });
+          const query = queryString.stringify({
+            ...template,
+            ...sort,
+            page: String(pageNumber),
+            pageSize: String(pageSize),
+          });
+
           const response = await api.search(query.toString());
           const result = {
             records: response.resultsetSize > 0 ? response.data : [],
