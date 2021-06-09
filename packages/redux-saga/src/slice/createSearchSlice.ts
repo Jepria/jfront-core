@@ -88,20 +88,25 @@ export const createSearchSlice = <
             delete template[param];
           }
         }
-        const query = queryString.stringify({
-          ...template,
-          page: String(action.payload.pageNumber),
-          pageSize: String(action.payload.pageSize),
-        });
+
+        const sort = {};
         action.payload.searchTemplate.listSortConfiguration?.forEach((sortConfig) => {
-          if (query["sort"]) {
-            (query["sort"] as Array<string>).push(
+          if (sort["sort"]) {
+            (sort["sort"] as Array<string>).push(
               `${sortConfig.columnName},${sortConfig.sortOrder}`,
             );
           } else {
-            query["sort"] = [`${sortConfig.columnName},${sortConfig.sortOrder}`];
+            sort["sort"] = [`${sortConfig.columnName},${sortConfig.sortOrder}`];
           }
         });
+
+        const query = queryString.stringify({
+          ...template,
+          ...sort,
+          page: String(action.payload.pageNumber),
+          pageSize: String(action.payload.pageSize),
+        });
+
         const result = yield call(api.search, query.toString());
         yield put(
           actions.searchSuccess({
